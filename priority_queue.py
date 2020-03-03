@@ -29,3 +29,6 @@ class PriorityQueue:
         ret_patient = self.patients[0]
         self.patients = self.patients[1:]
         return ret_patient
+
+    def has_patients_waiting(self):
+        return len(self.patients) > 0
