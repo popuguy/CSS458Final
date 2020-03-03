@@ -3,13 +3,13 @@
 """
 Created on Mon Mar  2 20:55:52 2020
 
-@author: minhuyen
+@author: minhuyen, popuguy
 """
 import numpy as np
 import random as rand
 
-class patient_constant:
+
+class PatientConstant:
     AGE = np.range(10, 50, 1)
     GENDER = ["Male", "Female", "Prefer not to answer"]
     RACE = ["American", "Asian", "African"]
-    
