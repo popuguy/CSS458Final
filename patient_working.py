@@ -15,7 +15,7 @@ class Patient:
     
     def __init__(self, consultation_time, environment):
         
-        self.ID = 0 #This is a unique ID of a patient
+        self.ID = random.randint(0, 100) #This is a unique ID of a patient
         self.gender = random.choice(patient_constant.GENDER) #This is the gender of a patient
         self.race = random.choice(patient_constant.RACE) #This is the race of a patient
         self.age = random.choice(patient_constant.AGE)
