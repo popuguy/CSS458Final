@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  1 14:59:07 2020
-
-@author: minhuyen
-"""
 import numpy as np
 import random 
 from patientConstant import patient_constant
