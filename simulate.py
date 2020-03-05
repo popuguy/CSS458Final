@@ -1,3 +1,4 @@
+# Import statements 
 from datetime import timedelta
 import datetime
 from hospital_constant import HospitalConstant
@@ -5,8 +6,6 @@ from exam_room import ExamRoom
 from priority_queue import PriorityQueue
 from doctor import Doctor
 from doctor_constant import *
-# from Model import Model
-# from patient_working import Patient
 from patient import Patient
 
 
