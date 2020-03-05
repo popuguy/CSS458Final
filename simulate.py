@@ -12,6 +12,13 @@ from patient import Patient
 
 def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3)):
+    """Main simulation function. Simulates the cycle of treat-and-release
+    patients going from the waiting room, to the exam room, to leaving in an
+    Emergency Department.
+
+    :param time_span: Length of full simulation.
+    :param time_delta: Time between movements in simulation.
+    """
     # doctors = HospitalConstant.DOCTORS
     doctors = [Doctor() for _ in range(HospitalConstant.NUM_DOCTORS)]
     exam_rooms = [ExamRoom() for _ in range(HospitalConstant.EXAM_ROOMS)]
