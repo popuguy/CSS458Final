@@ -71,15 +71,16 @@ class PatientConstant:
 
     # ------------------ Portion of patients with attributes -----------------
 
-    # Sex attributes
-    SOURCE_DATA_NUM_PATIENTS = 4955590
+    SOURCE_DATA_NUM_PATIENTS = 4955590  # People in study
+
+    # Sex attributes (# of people out of total)
     SOURCE_DATA_NUM_MALE = 2305226
     SOURCE_DATA_NUM_FEMALE = 2650203
     # Anomaly between num male, num female vs. total patients possibly due to
     # intersex patients
     SOURCE_DATA_PORTION_MALE = SOURCE_DATA_NUM_MALE / SOURCE_DATA_NUM_PATIENTS
 
-    # Age attributes
+    # Age attributes (# of people out of total)
     SOURCE_DATA_AGE_UNDER_15 = 946742
     SOURCE_DATA_AGE_15_24 = 875470
     SOURCE_DATA_AGE_25_44 = 1545098
@@ -87,7 +88,25 @@ class PatientConstant:
     SOURCE_DATA_AGE_65_74 = 253117
     SOURCE_DATA_AGE_OVER_74 = 327421
 
-    # Race attributes
+    SOURCE_DATA_TOTAL_AGE = SOURCE_DATA_AGE_UNDER_15 + SOURCE_DATA_AGE_15_24 +\
+                            SOURCE_DATA_AGE_25_44 + SOURCE_DATA_AGE_45_64 +\
+                            SOURCE_DATA_AGE_65_74 + SOURCE_DATA_AGE_OVER_74
+
+    SOURCE_DATA_PORTION_AGE_UNDER_15 = SOURCE_DATA_AGE_UNDER_15 / \
+                                       SOURCE_DATA_TOTAL_AGE
+    SOURCE_DATA_PORTION_AGE_15_24 = SOURCE_DATA_AGE_15_24 / \
+                                    SOURCE_DATA_TOTAL_AGE
+    SOURCE_DATA_PORTION_AGE_25_44 = SOURCE_DATA_AGE_25_44 / \
+                                    SOURCE_DATA_TOTAL_AGE
+    SOURCE_DATA_PORTION_AGE_45_64 = SOURCE_DATA_AGE_45_64 / \
+                                    SOURCE_DATA_TOTAL_AGE
+    SOURCE_DATA_PORTION_AGE_65_74 = SOURCE_DATA_AGE_65_74 / \
+                                    SOURCE_DATA_TOTAL_AGE
+    SOURCE_DATA_PORTION_AGE_OVER_74 = SOURCE_DATA_AGE_OVER_74 / \
+                                      SOURCE_DATA_TOTAL_AGE
+
+    # Race attributes (# of people out of total)
+
     SOURCE_DATA_RACE_WHITE = 3335431
     SOURCE_DATA_RACE_BLACK = 354549
     SOURCE_DATA_RACE_HISPANIC = 914958
@@ -95,14 +114,51 @@ class PatientConstant:
     SOURCE_DATA_RACE_NATIVE = 69377
     SOURCE_DATA_RACE_OTHER = 83967
 
-    # Insurance coverage attributes
+    SOURCE_DATA_TOTAL_RACE = SOURCE_DATA_RACE_WHITE + \
+                             SOURCE_DATA_RACE_BLACK + \
+                             SOURCE_DATA_RACE_HISPANIC + \
+                             SOURCE_DATA_RACE_ASIAN + \
+                             SOURCE_DATA_RACE_NATIVE + \
+                             SOURCE_DATA_RACE_OTHER
+
+    SOURCE_DATA_PORTION_RACE_WHITE = SOURCE_DATA_RACE_WHITE / \
+                                     SOURCE_DATA_TOTAL_RACE
+    SOURCE_DATA_PORTION_RACE_BLACK = SOURCE_DATA_RACE_BLACK / \
+                                     SOURCE_DATA_TOTAL_RACE
+    SOURCE_DATA_PORTION_RACE_HISPANIC = SOURCE_DATA_RACE_HISPANIC / \
+                                        SOURCE_DATA_TOTAL_RACE
+    SOURCE_DATA_PORTION_RACE_ASIAN = SOURCE_DATA_RACE_ASIAN / \
+                                     SOURCE_DATA_TOTAL_RACE
+    SOURCE_DATA_PORTION_RACE_NATIVE = SOURCE_DATA_RACE_NATIVE / \
+                                      SOURCE_DATA_TOTAL_RACE
+    SOURCE_DATA_PORTION_RACE_OTHER = SOURCE_DATA_RACE_OTHER / \
+                                     SOURCE_DATA_TOTAL_RACE
+
+    # Insurance coverage attributes (# of people out of total)
     SOURCE_DATA_INSURANCE_MEDICARE = 737230
     SOURCE_DATA_INSURANCE_MEDICAID = 1344182
     SOURCE_DATA_INSURANCE_PRIVATE = 1990780
     SOURCE_DATA_INSURANCE_OTHER = 239412
     SOURCE_DATA_INSURANCE_UNINSURED = 532653
 
-    AGE = np.range(10, 50, 1)
-    GENDER = ["Male", "Female"]
-    RACE = ["White", "Asian", "Black", "Hispanic", "Native", "Other"]
-    INSURANCE = ["Medicare", "Medicaid", "Private", "Other", "Uninsured"]
+    SOURCE_DATA_TOTAL_INSURANCE = SOURCE_DATA_INSURANCE_MEDICARE + \
+                                 SOURCE_DATA_INSURANCE_MEDICAID + \
+                                 SOURCE_DATA_INSURANCE_PRIVATE + \
+                                 SOURCE_DATA_INSURANCE_OTHER + \
+                                 SOURCE_DATA_INSURANCE_UNINSURED
+
+    SOURCE_DATA_PORTION_INSURANCE_MEDICARE = \
+        SOURCE_DATA_INSURANCE_MEDICARE / SOURCE_DATA_TOTAL_INSURANCE
+    SOURCE_DATA_PORTION_INSURANCE_MEDICAID = \
+        SOURCE_DATA_INSURANCE_MEDICAID / SOURCE_DATA_TOTAL_INSURANCE
+    SOURCE_DATA_PORTION_INSURANCE_PRIVATE = \
+        SOURCE_DATA_INSURANCE_PRIVATE / SOURCE_DATA_TOTAL_INSURANCE
+    SOURCE_DATA_PORTION_INSURANCE_OTHER = \
+        SOURCE_DATA_INSURANCE_OTHER / SOURCE_DATA_TOTAL_INSURANCE
+    SOURCE_DATA_PORTION_INSURANCE_UNINSURED = \
+        SOURCE_DATA_INSURANCE_UNINSURED / SOURCE_DATA_TOTAL_INSURANCE
+
+    # AGE = np.range(10, 50, 1)
+    # GENDER = ["Male", "Female"]
+    # RACE = ["White", "Asian", "Black", "Hispanic", "Native", "Other"]
+    # INSURANCE = ["Medicare", "Medicaid", "Private", "Other", "Uninsured"]
