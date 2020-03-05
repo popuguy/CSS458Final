@@ -34,9 +34,9 @@ def simulate_waiting(time_span=timedelta(days = 1),
         cur_datetime += time_delta  # Add elapsed time in simulation
 
         exam_rooms_available = []  # Exam rooms to fill
-        for exam_room in exam_rooms:
-            if exam_room.patient is None:
-                exam_rooms_available.append(exam_room)
+        for exam_r in exam_rooms:
+            if exam_r.patient is None:
+                exam_rooms_available.append(exam_r)
 #        print(exam_rooms_available)
 
         # --- FILLING ROOMS WITH PATIENTS ---
@@ -59,31 +59,32 @@ def simulate_waiting(time_span=timedelta(days = 1),
                 doctors_available.append(doctor)
 #        print(doctors_available)
 
-        for exam_room in exam_rooms:
+        for exam_r in exam_rooms:
             if len(doctors_available) < 1:
                 break
-            if exam_room.doctor is not None and \
-                    exam_room.patient.seen_by_doctor is not True:
+            if exam_r.doctor is None and exam_r.patient is not None and\
+                    exam_r.patient.seen_by_doctor is not True:
                 doctors_available[-1].enter_exam_room(cur_datetime)
-                exam_room.doctor = doctors_available[-1]
+                exam_r.doctor = doctors_available[-1]
+                print("Doctor entered")
                 doctors_available = doctors_available[:-1]
 #            print(doctors_available)
 
         # --- DOCTOR VISIT COMPLETIONS ---
-        for exam_room in exam_rooms:
-            if exam_room.doctor is not None and \
-                    exam_room.doctor.has_completed_patient_visit(cur_datetime):
-                exam_room.doctor.exit_exam_room()
+        for exam_r in exam_rooms:
+            if exam_r.doctor is not None and \
+                    exam_r.doctor.has_completed_patient_visit(cur_datetime):
+                exam_r.doctor.exit_exam_room()
                 print("Doctor left")
-                exam_room.patient.seen_by_doctor = True
+                exam_r.patient.seen_by_doctor = True
 
         # --- VACATE ROOMS APPROPRIATELY ---
-        for exam_room in exam_rooms:
-            if exam_room.patient is not None and \
-                    exam_room.patient.has_completed_visit(cur_datetime):
-                exam_room.patient.exit(cur_datetime)
+        for exam_r in exam_rooms:
+            if exam_r.patient is not None and \
+                    exam_r.patient.has_completed_visit(cur_datetime):
+                exam_r.patient.exit(cur_datetime)
                 print("Patient left")
-                exam_room.reset()
+                exam_r.reset()
 
         # For different configurations of the simulation, patients will be
         # added at different intervals here
