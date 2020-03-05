@@ -62,6 +62,12 @@ class Patient:
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_OTHER,
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_UNINSURED])
 
+        self.calculated_mean_hospital_time = self._calc_mean_wait_time()
+
+    def _calc_mean_wait_time(self):
+        # TODO: Fix to give a realistic wait time
+        return PatientConstant.MEAN_ALL_VISITS
+
     def queue(self, queue_time):
         self.status = PatientStatus.WAITING
         self.time_queued = queue_time

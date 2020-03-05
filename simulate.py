@@ -21,8 +21,6 @@ def simulate_waiting(time_span=timedelta(days=1),
     while cur_datetime < end_datetime:
         cur_datetime += time_delta  # Add elapsed time in simulation
 
-
-
         exam_rooms_available = []  # Exam rooms to fill
         for exam_room in exam_rooms:
             if exam_room.patient is None:
@@ -38,7 +36,7 @@ def simulate_waiting(time_span=timedelta(days=1),
             # Remove availability of selected exam room
             exam_rooms_available = exam_rooms_available[:-1]
 
-            cur_datetime += HospitalConstant.TIME_TRANSITION_SEEING_PATIENT
+            # cur_datetime += HospitalConstant.TIME_TRANSITION_SEEING_PATIENT
 
             cur_patient.serve(cur_datetime)
             cur_exam_room.patient = cur_patient
