@@ -6,5 +6,8 @@ class ExamRoom:
         self.patient = None  # None, if no patient occupying
         self.doctor = None
 
+    def reset(self):
+        self.patient = None
+        self.doctor = None
     # def can_vacate(self):
 

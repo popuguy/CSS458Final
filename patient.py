@@ -15,6 +15,7 @@ class Patient:
         self.status = PatientStatus.UNQUEUED
         self.time_queued = None
         self.time_served = None
+        self.time_exited = None
         # Once a patient has actually been seen by a doctor this changes to
         # True. It is a condition for exiting
         self.seen_by_doctor = False
@@ -66,6 +67,7 @@ class Patient:
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_UNINSURED])
 
         self.calculated_mean_hospital_time = self._calc_mean_wait_time()
+        # self.actual_hospital_time_min = something...
 
     def _calc_mean_wait_time(self):
         # TODO: Fix to give a realistic wait time
@@ -78,3 +80,11 @@ class Patient:
     def serve(self, service_time):
         self.status = PatientStatus.IN_ROOM
         self.time_served = service_time
+
+    def exit(self, cur_time):
+        self.time_exited = cur_time
+        self.status = PatientStatus.EXITING
+
+    def has_completed_visit(self, cur_time):
+        return (cur_time <= self.time_served +
+                self.calculated_mean_hospital_time) and self.seen_by_doctor
