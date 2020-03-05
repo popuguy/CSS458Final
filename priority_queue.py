@@ -32,3 +32,6 @@ class PriorityQueue:
 
     def has_patients_waiting(self):
         return len(self.patients) > 0
+
+    def get_length(self):
+        return len(self.patients)

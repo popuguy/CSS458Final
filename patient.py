@@ -1,6 +1,7 @@
 import random
 from patient_constant import *
 import numpy as np
+from datetime import timedelta
 
 
 class Patient:
@@ -28,7 +29,7 @@ class Patient:
         # https://www.researchgate.net/post/Is_there_a_statistical_procedure_for_comparing_multiple_means_to_a_specific_value
 
         # Weighted attribute selection
-        self.sex = np.random.choice(PatientSex.MALE, PatientSex.FEMALE,
+        self.sex = np.random.choice([PatientSex.MALE, PatientSex.FEMALE],
                                     p=[PatientConstant.SOURCE_DATA_PORTION_MALE,
                                        1 - PatientConstant.SOURCE_DATA_PORTION_MALE])
         self.age = np.random.choice([PatientAge.AGE_UNDER_15,
@@ -87,4 +88,6 @@ class Patient:
 
     def has_completed_visit(self, cur_time):
         return (cur_time <= self.time_served +
-                self.calculated_mean_hospital_time) and self.seen_by_doctor
+                timedelta(
+                    minutes=self.calculated_mean_hospital_time)) and \
+               self.seen_by_doctor
