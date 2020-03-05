@@ -47,7 +47,7 @@ class Model:
             self.consultation_time.append(patient.consultation_time)
             return patient
         
-    def next_patient(self):
+    def next_patient():
         if self.waiting_queue.empty():
             return 
         else: 
@@ -57,7 +57,7 @@ class Model:
         
         pass
     
-    def createPatient(self):
+    def createPatient():
         pass
     
     def calculate_mean(self):
