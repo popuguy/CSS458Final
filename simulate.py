@@ -3,7 +3,8 @@ import datetime
 from hospital_constant import HospitalConstant
 from exam_room import ExamRoom
 from priority_queue import PriorityQueue
-
+from Model import model
+from patient_working import patient
 
 def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3)):
@@ -27,6 +28,11 @@ def simulate_waiting(time_span=timedelta(days=1),
             # TODO: make patient enter exam room
             # - set entry time
             # - change patient status
+            model.patient_in_ED(patient)
+            
+            model.patient_out_ED(patient)
+            
+            model.next_patient(waiting_queue.get())
             pass
 
 
