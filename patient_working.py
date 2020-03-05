@@ -12,6 +12,7 @@ class Patient:
         self.gender = random.choice(patient_constant.GENDER) #This is the gender of a patient
         self.race = random.choice(patient_constant.RACE) #This is the race of a patient
         self.age = random.choice(patient_constant.AGE)
+        self.insurance = random.choice(patient_constant.INSURANCE)
         self.arrival_time = random.randint(0, 10, 5) #The time a patient arrives at the ER
         
         # The level of urgency will be generated randomly
@@ -37,6 +38,18 @@ class Patient:
             self.consutation_time *= patient_constant.RATE_RACE_NATIVE
         else:
             self.consutation_time *= patient_constant.RATE_RACE_OTHER
+            
+        if (self.insurance == "Medicare"):  #- Insurance coverage attribute
+            self.consutation_time *= patient_constant.RATE_INSURANCE_MEDICARE
+        elif (self.insurance == "Medicaid"):
+            self.consutation_time *= patient_constant.RATE_INSURANCE_MEDICAID
+        elif (self.insurance == "Private"):
+            self.consutation_time *= patient_constant.RATE_INSURANCE_PRIVATE
+        elif (self.insurance == "Other"):
+            self.consutation_time *= patient_constant.RATE_INSURANCE_OTHER
+        elif (self.insurace == "Uninsured"):
+            self.consutation_time *= patient_constant.RATE_INSURANCE_UNINSURED
+            
         
         
         
