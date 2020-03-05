@@ -13,3 +13,14 @@ class DoctorState(Enum):
     """
     READY = 0
     IN_PATIENT_EXAM_ROOM = 1
+    DOING_INDIRECT_PATIENT_CARE = 2
+    COMMUNICATING_WITH_STAFF = 3
+    DOCUMENTING_WORK = 4
+    MOVING = 5
+    PERSONAL_TIME = 6
+    OTHER = 7
+
+
+# Source:
+# https://www.statista.com/statistics/250219/us-physicians-opinion-about-their-compensation/
+AVG_TIME_SPENT_WITH_PATIENT = 20  # Minutes

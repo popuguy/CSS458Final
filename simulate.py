@@ -3,6 +3,8 @@ import datetime
 from hospital_constant import HospitalConstant
 from exam_room import ExamRoom
 from priority_queue import PriorityQueue
+from doctor import Doctor
+from doctor_constant import *
 # from Model import Model
 # from patient_working import Patient
 from patient import Patient
@@ -10,7 +12,8 @@ from patient import Patient
 
 def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3)):
-    doctors = HospitalConstant.DOCTORS
+    # doctors = HospitalConstant.DOCTORS
+    doctors = [Doctor() for _ in range(HospitalConstant.NUM_DOCTORS)]
     exam_rooms = [ExamRoom() for _ in range(HospitalConstant.EXAM_ROOMS)]
     waiting_queue = PriorityQueue()
     start_datetime = datetime.datetime(2020, 1, 1)
@@ -25,7 +28,11 @@ def simulate_waiting(time_span=timedelta(days=1),
         for exam_room in exam_rooms:
             if exam_room.patient is None:
                 exam_rooms_available.append(exam_room)
-                break
+
+        doctors_available = []
+        for doctor in doctors:
+            if doctor.state is DoctorState.READY:
+                doctors_available.append(doctor)
         # Given at least one room, patients waiting, and doctors available
         # fill all available rooms with a doctor and patient
         while waiting_queue.has_patients_waiting() and doctors > 0 \
@@ -35,8 +42,6 @@ def simulate_waiting(time_span=timedelta(days=1),
             cur_exam_room = exam_rooms_available[-1]
             # Remove availability of selected exam room
             exam_rooms_available = exam_rooms_available[:-1]
-
-            # cur_datetime += HospitalConstant.TIME_TRANSITION_SEEING_PATIENT
 
             cur_patient.serve(cur_datetime)
             cur_exam_room.patient = cur_patient
