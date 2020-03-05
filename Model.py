@@ -1,16 +1,23 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  1 15:11:19 2020
-
-@author: minhuyen
-"""
+# ---------------- Module General Import and Declarations ---------------------------------
 import simpy
 from patient import Patient as patient
 from priority_queue import PriorityQueue as pq
-""" This class is used to model the simulation
-"""
 
+# ========================================================================================
+#                        General Documentation
+
+"""Multiple functions module.
+
+   See function docstring for description.
+"""
+# ----------------------------------------------------------------------------------------
+#                        Additional Documentation
+#
+#This class is used to model the simulation
+#
+#
+#
+# ----------------------------------------------------------------------------------------
 class Model:
     
     def __init__(self, env):
