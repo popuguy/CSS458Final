@@ -20,6 +20,9 @@ def simulate_waiting(time_span=timedelta(days=1),
     # --- MAIN LOOP FOR SIMULATION ---
     while cur_datetime < end_datetime:
         cur_datetime += time_delta  # Add elapsed time in simulation
+
+
+
         exam_rooms_available = []  # Exam rooms to fill
         for exam_room in exam_rooms:
             if exam_room.patient is None:
@@ -29,18 +32,6 @@ def simulate_waiting(time_span=timedelta(days=1),
         # fill all available rooms with a doctor and patient
         while waiting_queue.has_patients_waiting() and doctors > 0 \
                 and len(exam_rooms_available) > 0:
-            # TODO: make patient enter exam room
-            # - set entry time
-            # - change patient status
-            # model.patient_in_ED(patient)
-
-            # model.patient_out_ED(patient)
-
-            # model.next_patient(waiting_queue.get())
-
-
-
-
             cur_patient = waiting_queue.get()
             doctors -= 1
             cur_exam_room = exam_rooms_available[-1]
