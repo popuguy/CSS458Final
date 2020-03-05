@@ -15,6 +15,9 @@ class Patient:
         self.status = PatientStatus.UNQUEUED
         self.time_queued = None
         self.time_served = None
+        # Once a patient has actually been seen by a doctor this changes to
+        # True. It is a condition for exiting
+        self.seen_by_doctor = False
         self._give_statistical_attributes()
 
     def _give_statistical_attributes(self):

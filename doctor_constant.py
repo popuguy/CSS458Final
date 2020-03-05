@@ -21,6 +21,7 @@ class DoctorState(Enum):
     OTHER = 7
 
 
-# Source:
-# https://www.statista.com/statistics/250219/us-physicians-opinion-about-their-compensation/
-AVG_TIME_SPENT_WITH_PATIENT = 20  # Minutes
+class DoctorConstant:
+    # Source:
+    # https://www.statista.com/statistics/250219/us-physicians-opinion-about-their-compensation/
+    AVG_TIME_SPENT_WITH_PATIENT = 20  # Minutes

@@ -33,18 +33,27 @@ def simulate_waiting(time_span=timedelta(days=1),
         for doctor in doctors:
             if doctor.state is DoctorState.READY:
                 doctors_available.append(doctor)
-        # Given at least one room, patients waiting, and doctors available
-        # fill all available rooms with a doctor and patient
-        while waiting_queue.has_patients_waiting() and doctors > 0 \
-                and len(exam_rooms_available) > 0:
+        # --- FILLING ROOMS ---
+        while waiting_queue.has_patients_waiting() and \
+                len(exam_rooms_available) > 0:
             cur_patient = waiting_queue.get()
-            doctors -= 1
-            cur_exam_room = exam_rooms_available[-1]
-            # Remove availability of selected exam room
-            exam_rooms_available = exam_rooms_available[:-1]
 
-            cur_patient.serve(cur_datetime)
-            cur_exam_room.patient = cur_patient
+            # cur_doctor = doctors_available[-1]
+            # # Make doctor occupied
+            # doctors_available = doctors_available[:-1]
+            #
+            # cur_exam_room = exam_rooms_available[-1]
+            # # Remove availability of selected exam room
+            # exam_rooms_available = exam_rooms_available[:-1]
+            #
+            # cur_patient.serve(cur_datetime)
+            # cur_exam_room.patient = cur_patient
+            # cur_doctor.enter_exam_room(start_datetime)
+
+        # --- STATE CHANGES ---
+        for exam_room in exam_rooms:
+            if exam_room.doctor is not None and exam_room.doctor.has_completed_patient_visit(cur_datetime):
+                exam_room.doctor.exit_exam_room()
 
 
 if __name__ == '__main__':
