@@ -49,7 +49,7 @@ def simulate_waiting(time_span=timedelta(days = 1),
             exam_rooms_available = exam_rooms_available[:-1]
 
             cur_patient.serve(cur_datetime)
-            print("Served patient..")
+            print("Served patient", cur_patient.id)
             cur_exam_room.patient = cur_patient
 
         # --- FILLING WITH DOCTORS ---
@@ -66,7 +66,8 @@ def simulate_waiting(time_span=timedelta(days = 1),
                     exam_r.patient.seen_by_doctor is not True:
                 doctors_available[-1].enter_exam_room(cur_datetime)
                 exam_r.doctor = doctors_available[-1]
-                print("Doctor entered")
+                print("Doctor", exam_r.doctor.id , "entered for patient", 
+                      exam_r.patient.id)
                 doctors_available = doctors_available[:-1]
 #            print(doctors_available)
 
@@ -75,7 +76,8 @@ def simulate_waiting(time_span=timedelta(days = 1),
             if exam_r.doctor is not None and \
                     exam_r.doctor.has_completed_patient_visit(cur_datetime):
                 exam_r.doctor.exit_exam_room()
-                print("Doctor left")
+                print("Doctor", exam_r.doctor.id, "left for patient", 
+                      exam_r.patient.id)
                 exam_r.patient.seen_by_doctor = True
 
         # --- VACATE ROOMS APPROPRIATELY ---
@@ -83,7 +85,7 @@ def simulate_waiting(time_span=timedelta(days = 1),
             if exam_r.patient is not None and \
                     exam_r.patient.has_completed_visit(cur_datetime):
                 exam_r.patient.exit(cur_datetime)
-                print("Patient left")
+                print("Patient", exam_r.patient.id, "left")
                 exam_r.reset()
 
         # For different configurations of the simulation, patients will be
