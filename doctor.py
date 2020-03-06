@@ -4,9 +4,13 @@ import datetime
 
 
 class Doctor:
+    next_id = 0
+    
     def __init__(self):
         self.state = DoctorState.READY
         self.time_entered_exam_room = None
+        self.id = Doctor.next_id
+        Doctor.next_id += 1
 
     def enter_exam_room(self, entry_time):
         self.state = DoctorState.IN_PATIENT_EXAM_ROOM
