@@ -18,16 +18,18 @@ def simulate_waiting(time_span=timedelta(days=1),
     :param time_span: Length of full simulation.
     :param time_delta: Time between movements in simulation.
     """
-    # doctors = HospitalConstant.DOCTORS
     doctors = [Doctor() for _ in range(HospitalConstant.NUM_DOCTORS)]
     exam_rooms = [ExamRoom() for _ in range(HospitalConstant.EXAM_ROOMS)]
-    # unqueued_patients = []
+
     waiting_queue = PriorityQueue()
     start_datetime = datetime.datetime(2020, 1, 1)
     cur_datetime = datetime.datetime(2020, 1, 1)  # SIMULATION CURRENT TIME
     end_datetime = start_datetime + time_span
 
     patients_to_generate = 0.0
+    # Place for all patients that came through the clinic. Used for
+    # conclusions, not the actual simulation.
+    patients_visiting = []
 
     # --- MAIN LOOP FOR SIMULATION ---
     while cur_datetime < end_datetime:
@@ -37,7 +39,6 @@ def simulate_waiting(time_span=timedelta(days=1),
         for exam_r in exam_rooms:
             if exam_r.patient is None:
                 exam_rooms_available.append(exam_r)
-#        print(exam_rooms_available)
 
         # --- FILLING ROOMS WITH PATIENTS ---
         while waiting_queue.has_patients_waiting() and \
@@ -57,26 +58,24 @@ def simulate_waiting(time_span=timedelta(days=1),
         for doctor in doctors:
             if doctor.state is DoctorState.READY:
                 doctors_available.append(doctor)
-#        print(doctors_available)
 
         for exam_r in exam_rooms:
             if len(doctors_available) < 1:
                 break
-            if exam_r.doctor is None and exam_r.patient is not None and\
+            if exam_r.doctor is None and exam_r.patient is not None and \
                     exam_r.patient.seen_by_doctor is not True:
                 doctors_available[-1].enter_exam_room(cur_datetime)
                 exam_r.doctor = doctors_available[-1]
                 print("Doctor", exam_r.doctor.id, "entered for patient",
                       exam_r.patient.id)
                 doctors_available = doctors_available[:-1]
-#            print(doctors_available)
 
         # --- DOCTOR VISIT COMPLETIONS ---
         for exam_r in exam_rooms:
             if exam_r.doctor is not None and \
                     exam_r.doctor.has_completed_patient_visit(cur_datetime):
                 exam_r.doctor.exit_exam_room()
-                print("Doctor", exam_r.doctor.id, "left for patient", 
+                print("Doctor", exam_r.doctor.id, "left for patient",
                       exam_r.patient.id)
                 exam_r.patient.seen_by_doctor = True
 
@@ -96,17 +95,23 @@ def simulate_waiting(time_span=timedelta(days=1),
 
         patients_to_generate += mins_elapsed * patients_per_minute
         unqueued_patients = [Patient() for _
-                              in range(int(patients_to_generate))]
-        
-        #print("Patients to generate", patients_to_generate)
+                             in range(int(patients_to_generate))]
 
         patients_to_generate -= int(patients_to_generate)
 
         # --- QUEUE PATIENTS ---
         for patient in unqueued_patients:
             waiting_queue.add(patient)
-#            print("Added patient. Queue length now",
-#                  waiting_queue.get_length())
+            patients_visiting.append(patient)
+
+    # Conclusions
+    # total_wait_time = 0
+    # total_served_patients = 0
+    # for i in range(len(patients_visiting)):
+    #     wait_time_patient = p.time_served - p.time_queued
+    #     total_wait_time += wait_time_patient
+    # avg_wait_time = total_wait_time / len(patients_visiting)
+    # print("Average wait time for simulation:", avg_wait_time)
 
 
 if __name__ == '__main__':
