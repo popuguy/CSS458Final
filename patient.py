@@ -4,12 +4,14 @@ from patient_constant import *
 import numpy as np
 from datetime import timedelta
 
-"""This class represents a patient with these attributes: sex, age, race, and insurance status. A patient will aslo have a 
-    variable called status to keep track of where they are in the queue.
-"""
+
 class Patient:
-    
-    # Constructor for the class
+    """This class represents a patient with these attributes: sex, age, race,
+    and insurance status. A patient will also have a variable called status to
+    keep track of where they are in the queue.
+    """
+    last_id = 0
+
     def __init__(self):
         """For now, Patient initialization should always be randomized
         according to data-based attributes of hospital patients from
@@ -18,7 +20,7 @@ class Patient:
         Source:
         https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
         """
-        self.status = PatientStatus.UNQUEUED # keep track of where a patient is in a queue
+        self.status = PatientStatus.UNQUEUED  # keep track of where a patient is in a queue
         self.time_queued = None  # the time when a patient is in the queue
         self.time_served = None  # the time when a patient is served, or enter the exam room
         self.time_exited = None  # the time when a patient is done with the examination, and leave the ER
@@ -26,6 +28,9 @@ class Patient:
         # True. It is a condition for exiting
         self.seen_by_doctor = False
         self._give_statistical_attributes()  # generate random attributes to a patient
+
+        Patient.last_id += 1
+        self.id = Patient.last_id
 
     def _give_statistical_attributes(self):
         """Assign random value to a patient's attributes
@@ -38,7 +43,7 @@ class Patient:
         self.sex = np.random.choice([PatientSex.MALE, PatientSex.FEMALE],
                                     p=[PatientConstant.SOURCE_DATA_PORTION_MALE,
                                        1 - PatientConstant.SOURCE_DATA_PORTION_MALE])
-        
+
         self.age = np.random.choice([PatientAge.AGE_UNDER_15,
                                      PatientAge.AGE_15_24,
                                      PatientAge.AGE_25_44,
@@ -51,7 +56,7 @@ class Patient:
                                        PatientConstant.SOURCE_DATA_PORTION_AGE_45_64,
                                        PatientConstant.SOURCE_DATA_PORTION_AGE_65_74,
                                        PatientConstant.SOURCE_DATA_PORTION_AGE_OVER_74])
-        
+
         self.race = np.random.choice([PatientRace.WHITE,
                                       PatientRace.BLACK,
                                       PatientRace.HISPANIC,
@@ -64,7 +69,7 @@ class Patient:
                                         PatientConstant.SOURCE_DATA_PORTION_RACE_ASIAN,
                                         PatientConstant.SOURCE_DATA_PORTION_RACE_NATIVE,
                                         PatientConstant.SOURCE_DATA_PORTION_RACE_OTHER])
-        
+
         self.insurance = np.random.choice([PatientInsurance.MEDICARE,
                                            PatientInsurance.MEDICAID,
                                            PatientInsurance.PRIVATE,
