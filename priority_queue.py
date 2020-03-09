@@ -35,27 +35,34 @@ class PriorityQueue:
 
     def get_length(self):
         return len(self.patients)
-    
-    from priority_queue import PriorityQueue as q
+
+    # from priority_queue import PriorityQueue as q
 
     # This is what I did so far. Please check the code if it's correct and modified it to fit our model. Thank you.
+
+
 class QueueingAlgorithm:
     """A priority queue based on the treatment time.
     """
-    def __init__(self):
-        self.queue = q
-        
-    def change(self, patient):
-    # traverse the queue 
-      for x in range(0, self.size()):
-        # if the treatment time of the current patient is longer
-        if patient.treatment_time >= self.queue[x].treatment_time:
-          # if we have traversed the complete queue
-          if x == (self.size()-1):
-            # add the patient at the end
-            self.queue.add(x+1, patient)
-          else:
-            continue
+
+    def fast_first(self, patient_list, patient):
+        """A queueing algorithm that always prioritizes patients with faster
+        predicted times in the exam room
+
+        :param patient_list: The waiting queue to add to
+        :param patient: The patient to add
+        :return: Ordered patient list with newly added patient
+        """
+        # traverse the queue
+        for x in range(0, self.size()):
+            # if the treatment time of the current patient is longer
+            if patient.treatment_time >= patient_list[x].treatment_time:
+                # if we have traversed the complete queue
+                if x == (self.size() - 1):
+                    # add the patient at the end
+                    patient_list.add(x + 1, patient)
+                else:
+                    continue
         else:
-          self.queue.add(x, patient)
-          return True
+            patient_list.add(x, patient)
+            return patient_list

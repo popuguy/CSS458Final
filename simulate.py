@@ -9,8 +9,8 @@ from doctor_constant import *
 from patient import Patient
 
 
-def simulate_waiting(time_span=timedelta(days = 1),
-                     time_delta=timedelta(minutes = 3)):
+def simulate_waiting(time_span=timedelta(days=1),
+                     time_delta=timedelta(minutes=3)):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
@@ -21,7 +21,7 @@ def simulate_waiting(time_span=timedelta(days = 1),
     # doctors = HospitalConstant.DOCTORS
     doctors = [Doctor() for _ in range(HospitalConstant.NUM_DOCTORS)]
     exam_rooms = [ExamRoom() for _ in range(HospitalConstant.EXAM_ROOMS)]
-    unqueued_patients = []
+    # unqueued_patients = []
     waiting_queue = PriorityQueue()
     start_datetime = datetime.datetime(2020, 1, 1)
     cur_datetime = datetime.datetime(2020, 1, 1)  # SIMULATION CURRENT TIME
@@ -66,7 +66,7 @@ def simulate_waiting(time_span=timedelta(days = 1),
                     exam_r.patient.seen_by_doctor is not True:
                 doctors_available[-1].enter_exam_room(cur_datetime)
                 exam_r.doctor = doctors_available[-1]
-                print("Doctor", exam_r.doctor.id , "entered for patient", 
+                print("Doctor", exam_r.doctor.id, "entered for patient",
                       exam_r.patient.id)
                 doctors_available = doctors_available[:-1]
 #            print(doctors_available)
