@@ -90,14 +90,25 @@ class Patient:
         # Source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
         self.levelOfUrgency = np.random.choice(np.range(1, 6))
         
-    """This is a method to calculate the treament time of a patient. Treatment time is defined as the difference 
-    between the time the patient had initial contact with a physician, physician assistant, or nurse practitioner 
-    and the time the patient was discharged from the ED to another hospital unit or to the patient's residence.
-    Please refer to the source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm"""
     def _calc_treatment_time(self):
+        """This is a method to calculate the treament time of a patient. 
+        Treatment time is defined as the difference between the time 
+        the patient had initial contact with a doctor and the time the patient 
+        was discharged from the emergency room
+        Please refer to source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
+        
+        Patient's treatment time also differes according to their age, gender,
+        race, and type of insurance attributes
+        """
         # I make an assumption here that when the patient is served or enter the exam room, this means they have
         # contact with doctor.
         self.treatment_time = self.time_exited - self.time_served 
+        
+        # Caculate the treatment according to patient's attribute
+        self.treatment_time *= PatientConstant.RATE_GENDER[self.sex] *
+                            \ PatientConstant.RATE_RACE[self.race] *
+                            \ PatientConstant.RACE_INSURANCE[self.insurance]
+        
         return self.treatment_time
 
     """This is a method to calculate the wait time of a patient. Wait time is defined as the difference 
