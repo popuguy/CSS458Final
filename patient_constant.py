@@ -79,6 +79,16 @@ class PatientConstant:
     RATE_INSURACE = [RATE_INSURACE_MEDICARE, RATE_INSURANCE_MEDICAID, \
                      RATE_INSURANCE_PRIVATE, RATE_INSURANCE_OTHER, \
                      RATE_INSURANCE_UNINSURED]
+    
+    # - Patient's age attribute
+    RATE_AGE_UNDER_15 = 142.2 / MEAN_ALL_VISITS
+    RATE_AGE_15_24 = 183.9 / MEAN_ALL_VISITS
+    RATE_AGE_25_44 = 203.1 / MEAN_ALL_VISITS
+    RATE_AGE_45_64 = 223.7 / MEAN_ALL_VISITS
+    RATE_AGE_65_74 = 227.3 / MEAN_ALL_VISITS
+    RATE_AGE_OVER_74 = 237.5 / MEAN_ALL_VISITS
+    RATE_AGE = [RATE_AGE_UNDER_15, RATE_AGE_15_24, RATE_AGE_25_44, \
+                RATE_AGE_45_64, RATE_AGE_65_74, RATE_AGE_OVER_74]
 
     # ------------------ Portion of patients with attributes -----------------
 
