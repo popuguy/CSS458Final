@@ -5,20 +5,28 @@ import random as rand
 
 """This class represents the current status of a patient.
 """
+
+
 class PatientStatus(Enum):
     UNQUEUED = 0
     WAITING = 1
     IN_ROOM = 2
     EXITING = 3
 
+
 """This class represents a patient's gender.
 """
+
+
 class PatientSex(Enum):
     MALE = 0
     FEMALE = 1
 
+
 """This class represents the age of a patient. Each age range is specified with a number.
 """
+
+
 class PatientAge(Enum):
     AGE_UNDER_15 = 0
     AGE_15_24 = 1
@@ -27,8 +35,11 @@ class PatientAge(Enum):
     AGE_65_74 = 4
     AGE_OVER_74 = 5
 
+
 """This class represents a patient's race. Each race is specified with a number.
 """
+
+
 class PatientRace(Enum):
     WHITE = 0
     BLACK = 1
@@ -37,8 +48,11 @@ class PatientRace(Enum):
     NATIVE = 4
     OTHER = 5
 
+
 """This class represents the insurance status/information of a patient. Each of them is specified with a number.
 """
+
+
 class PatientInsurance(Enum):
     MEDICARE = 0
     MEDICAID = 1
@@ -76,9 +90,9 @@ class PatientConstant:
     RATE_INSURANCE_PRIVATE = 192.8 / MEAN_ALL_VISITS
     RATE_INSURANCE_OTHER = 169.4 / MEAN_ALL_VISITS
     RATE_INSURANCE_UNINSURED = 191.8 / MEAN_ALL_VISITS
-    RATE_INSURACE = [RATE_INSURACE_MEDICARE, RATE_INSURANCE_MEDICAID, \
-                     RATE_INSURANCE_PRIVATE, RATE_INSURANCE_OTHER, \
-                     RATE_INSURANCE_UNINSURED]
+    RATE_INSURANCE = [RATE_INSURANCE_MEDICARE, RATE_INSURANCE_MEDICAID,
+                      RATE_INSURANCE_PRIVATE, RATE_INSURANCE_OTHER,
+                      RATE_INSURANCE_UNINSURED]
 
     # ------------------ Portion of patients with attributes -----------------
 
@@ -99,8 +113,8 @@ class PatientConstant:
     SOURCE_DATA_AGE_65_74 = 253117
     SOURCE_DATA_AGE_OVER_74 = 327421
 
-    SOURCE_DATA_TOTAL_AGE = SOURCE_DATA_AGE_UNDER_15 + SOURCE_DATA_AGE_15_24 +\
-                            SOURCE_DATA_AGE_25_44 + SOURCE_DATA_AGE_45_64 +\
+    SOURCE_DATA_TOTAL_AGE = SOURCE_DATA_AGE_UNDER_15 + SOURCE_DATA_AGE_15_24 + \
+                            SOURCE_DATA_AGE_25_44 + SOURCE_DATA_AGE_45_64 + \
                             SOURCE_DATA_AGE_65_74 + SOURCE_DATA_AGE_OVER_74
 
     SOURCE_DATA_PORTION_AGE_UNDER_15 = SOURCE_DATA_AGE_UNDER_15 / \
@@ -153,10 +167,10 @@ class PatientConstant:
     SOURCE_DATA_INSURANCE_UNINSURED = 532653
 
     SOURCE_DATA_TOTAL_INSURANCE = SOURCE_DATA_INSURANCE_MEDICARE + \
-                                 SOURCE_DATA_INSURANCE_MEDICAID + \
-                                 SOURCE_DATA_INSURANCE_PRIVATE + \
-                                 SOURCE_DATA_INSURANCE_OTHER + \
-                                 SOURCE_DATA_INSURANCE_UNINSURED
+                                  SOURCE_DATA_INSURANCE_MEDICAID + \
+                                  SOURCE_DATA_INSURANCE_PRIVATE + \
+                                  SOURCE_DATA_INSURANCE_OTHER + \
+                                  SOURCE_DATA_INSURANCE_UNINSURED
 
     SOURCE_DATA_PORTION_INSURANCE_MEDICARE = \
         SOURCE_DATA_INSURANCE_MEDICARE / SOURCE_DATA_TOTAL_INSURANCE

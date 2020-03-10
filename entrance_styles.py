@@ -61,6 +61,7 @@ class PatientEntranceStyles:
                             min_num_patients_per_hour) /
                            time_from_start_peak.total_seconds() / 60) * \
                           self._time_delta_to_minutes(time_delta)
+            print(before_peak)
             cur_patients_per_hour = peak_num_patients_per_hour - \
                                     before_peak * num_loops
             cur_patients_per_min = cur_patients_per_hour / 60
@@ -77,6 +78,7 @@ class PatientEntranceStyles:
                         min_num_patients_per_hour) /
                        time_from_start_peak.total_seconds() / 60) * \
                       self._time_delta_to_minutes(time_delta)
+        print(before_peak)
         cur_patients_per_hour = min_num_patients_per_hour + \
                                 before_peak * num_loops
         cur_patients_per_min = cur_patients_per_hour / 60

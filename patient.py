@@ -20,6 +20,8 @@ class Patient:
         Source:
         https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
         """
+        # TODO: MAKE THIS REAL
+        self.calculated_mean_hospital_time = PatientConstant.MEAN_ALL_VISITS
         self.status = PatientStatus.UNQUEUED  # keep track of where a patient is in a queue
         self.time_queued = None  # the time when a patient is in the queue
         self.time_served = None  # the time when a patient is served, or enter the exam room
@@ -87,7 +89,7 @@ class Patient:
 
         # This is the level of urgency which will affect the treatment and wait time.
         # Source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
-        self.levelOfUrgency = np.random.choice(np.range(1, 6))
+        self.levelOfUrgency = np.random.choice(np.arange(1, 6))
 
     def _calc_treatment_time(self):
         """This is a method to calculate the treatment time of a patient.

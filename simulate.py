@@ -20,7 +20,7 @@ def time_delta_to_minutes(time_delta):
 
 def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3),
-                     verbose=True):
+                     verbose=False):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
