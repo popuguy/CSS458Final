@@ -10,12 +10,13 @@ class PriorityQueue:
         self.patients = []
         self.queue_algorithm = alg
 
-    def add(self, patient):
+    def add(self, patient, add_time):
         """Queues a new patient to a position in the waiting queue based on
         the queue algorithm from __init__.
 
         :param patient: patient to queue.
         """
+        patient.queue(add_time)
         self.queue_algorithm(self.patients, patient)
 
     def get(self):

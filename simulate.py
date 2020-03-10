@@ -9,6 +9,15 @@ from doctor_constant import *
 from patient import Patient
 
 
+
+def time_delta_to_minutes(time_delta):
+    """Accurate to one second time delta in minutes returned.
+    :param time_delta A datetime.timedelta object
+    :returns A float of minutes in the time delta
+    """
+    return (time_delta.days * 24 * 60) + (time_delta.seconds / 60)
+
+
 def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3)):
     """Main simulation function. Simulates the cycle of treat-and-release
@@ -101,17 +110,24 @@ def simulate_waiting(time_span=timedelta(days=1),
 
         # --- QUEUE PATIENTS ---
         for patient in unqueued_patients:
-            waiting_queue.add(patient)
+            waiting_queue.add(patient, cur_datetime)
             patients_visiting.append(patient)
 
     # Conclusions
-    # total_wait_time = 0
-    # total_served_patients = 0
-    # for i in range(len(patients_visiting)):
-    #     wait_time_patient = p.time_served - p.time_queued
-    #     total_wait_time += wait_time_patient
-    # avg_wait_time = total_wait_time / len(patients_visiting)
-    # print("Average wait time for simulation:", avg_wait_time)
+    total_wait_time = 0
+    total_served_patients = 0
+    for i in range(len(patients_visiting)):
+        if patients_visiting[i].time_queued is None or \
+                patients_visiting[i].time_served is None:
+            continue
+
+        total_served_patients += 1
+        wait_time_patient_delta = patients_visiting[i].time_served - \
+                                  patients_visiting[i].time_queued
+        wait_time_patient_mins = time_delta_to_minutes(wait_time_patient_delta)
+        total_wait_time += wait_time_patient_mins
+    avg_wait_time = total_wait_time / total_served_patients
+    print("Average wait time for simulation:", avg_wait_time, "minutes.")
 
 
 if __name__ == '__main__':
