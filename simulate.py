@@ -7,7 +7,7 @@ from priority_queue import PriorityQueue
 from doctor import Doctor
 from doctor_constant import *
 from patient import Patient
-
+from entrance_styles import PatientEntranceStyles
 
 
 def time_delta_to_minutes(time_delta):
@@ -19,16 +19,20 @@ def time_delta_to_minutes(time_delta):
 
 
 def simulate_waiting(time_span=timedelta(days=1),
-                     time_delta=timedelta(minutes=3)):
+                     time_delta=timedelta(minutes=3),
+                     verbose=True):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
 
+    :param verbose: If True, print info in simulation.
     :param time_span: Length of full simulation.
     :param time_delta: Time between movements in simulation.
     """
     doctors = [Doctor() for _ in range(HospitalConstant.NUM_DOCTORS)]
     exam_rooms = [ExamRoom() for _ in range(HospitalConstant.EXAM_ROOMS)]
+
+    entrance_style = PatientEntranceStyles()
 
     waiting_queue = PriorityQueue()
     start_datetime = datetime.datetime(2020, 1, 1)
@@ -40,8 +44,11 @@ def simulate_waiting(time_span=timedelta(days=1),
     # conclusions, not the actual simulation.
     patients_visiting = []
 
+    num_loops = 0
+
     # --- MAIN LOOP FOR SIMULATION ---
     while cur_datetime < end_datetime:
+        num_loops += 1
         cur_datetime += time_delta  # Add elapsed time in simulation
 
         exam_rooms_available = []  # Exam rooms to fill
@@ -59,7 +66,8 @@ def simulate_waiting(time_span=timedelta(days=1),
             exam_rooms_available = exam_rooms_available[:-1]
 
             cur_patient.serve(cur_datetime)
-            print("Served patient", cur_patient.id)
+            if verbose:
+                print("Served patient", cur_patient.id)
             cur_exam_room.patient = cur_patient
 
         # --- FILLING WITH DOCTORS ---
@@ -75,7 +83,8 @@ def simulate_waiting(time_span=timedelta(days=1),
                     exam_r.patient.seen_by_doctor is not True:
                 doctors_available[-1].enter_exam_room(cur_datetime)
                 exam_r.doctor = doctors_available[-1]
-                print("Doctor", exam_r.doctor.id, "entered for patient",
+                if verbose:
+                    print("Doctor", exam_r.doctor.id, "entered for patient",
                       exam_r.patient.id)
                 doctors_available = doctors_available[:-1]
 
@@ -84,7 +93,8 @@ def simulate_waiting(time_span=timedelta(days=1),
             if exam_r.doctor is not None and \
                     exam_r.doctor.has_completed_patient_visit(cur_datetime):
                 exam_r.doctor.exit_exam_room()
-                print("Doctor", exam_r.doctor.id, "left for patient",
+                if verbose:
+                    print("Doctor", exam_r.doctor.id, "left for patient",
                       exam_r.patient.id)
                 exam_r.patient.seen_by_doctor = True
 
@@ -93,7 +103,8 @@ def simulate_waiting(time_span=timedelta(days=1),
             if exam_r.patient is not None and \
                     exam_r.patient.has_completed_visit(cur_datetime):
                 exam_r.patient.exit(cur_datetime)
-                print("Patient", exam_r.patient.id, "left")
+                if verbose:
+                    print("Patient", exam_r.patient.id, "left")
                 exam_r.reset()
 
         # For different configurations of the simulation, patients will be
@@ -107,6 +118,8 @@ def simulate_waiting(time_span=timedelta(days=1),
                              in range(int(patients_to_generate))]
 
         patients_to_generate -= int(patients_to_generate)
+
+        print("it would gen", entrance_style.rise_and_fall_linear(num_loops, time_delta), "patients here")
 
         # --- QUEUE PATIENTS ---
         for patient in unqueued_patients:

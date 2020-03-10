@@ -80,35 +80,34 @@ class Patient:
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_PRIVATE,
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_OTHER,
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_UNINSURED])
-        
-        
+
         # find the mean of the waiting time
         # self.calculated_mean_hospital_time = self._calc_mean_wait_time()
         # self.actual_hospital_time_min = something...
-        
+
         # This is the level of urgency which will affect the treatment and wait time.
         # Source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
         self.levelOfUrgency = np.random.choice(np.range(1, 6))
-        
+
     def _calc_treatment_time(self):
-        """This is a method to calculate the treament time of a patient. 
+        """This is a method to calculate the treatment time of a patient.
         Treatment time is defined as the difference between the time 
         the patient had initial contact with a doctor and the time the patient 
         was discharged from the emergency room
         Please refer to source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
         
-        Patient's treatment time also differes according to their age, gender,
+        Patient's treatment time also differs according to their age, gender,
         race, and type of insurance attributes
         """
         # I make an assumption here that when the patient is served or enter the exam room, this means they have
         # contact with doctor.
-        self.treatment_time = self.time_exited - self.time_served 
-        
-        # Caculate the treatment according to patient's attribute
-        self.treatment_time *= PatientConstant.RATE_GENDER[self.sex] *
-                            \ PatientConstant.RATE_RACE[self.race] *
-                            \ PatientConstant.RACE_INSURANCE[self.insurance]
-        
+        self.treatment_time = self.time_exited - self.time_served
+
+        # Calculate the treatment according to patient's attribute
+        self.treatment_time *= PatientConstant.RATE_GENDER[self.sex]
+        self.treatment_time *= PatientConstant.RATE_RACE[self.race]
+        self.treatment_time *= PatientConstant.RACE_INSURANCE[self.insurance]
+
         return self.treatment_time
 
     """This is a method to calculate the wait time of a patient. Wait time is defined as the difference 
@@ -116,12 +115,13 @@ class Patient:
         assistant, or nurse practitioner.
         Please refer to the source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
     """
+
     def _calc_wait_time(self):
         # TODO: Fix to give a realistic wait time
         # I make an assumption here that the time when a patient is in the queue is the time when they arrive at ER.
         self.wait_time = self.time_served - self.time_queued
         return self.wait_time
-        #return PatientConstant.MEAN_ALL_VISITS
+        # return PatientConstant.MEAN_ALL_VISITS
 
     def queue(self, queue_time):
         """Enqueue a patient
@@ -142,11 +142,9 @@ class Patient:
         self.status = PatientStatus.EXITING
 
     def has_completed_visit(self, cur_time):
-        """Get the total time during a patient's visit by adding waiting time and consultation time
+        """Get the total time during a patient's visit by adding waiting time
+        and consultation time
         """
         return (cur_time <= self.time_served +
-                timedelta(
-                    minutes=self.calculated_mean_hospital_time)) and \
+                timedelta(minutes=self.calculated_mean_hospital_time)) and \
                self.seen_by_doctor
-    
-
