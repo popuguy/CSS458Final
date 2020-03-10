@@ -44,7 +44,7 @@ class PriorityQueue:
 class QueueingAlgorithm:
     """A priority queue based on the treatment time.
     """
-
+    
     def fast_first(self, patient_list, patient):
         """A queueing algorithm that always prioritizes patients with faster
         predicted times in the exam room
@@ -63,6 +63,24 @@ class QueueingAlgorithm:
                     patient_list.add(x + 1, patient)
                 else:
                     continue
-        else:
-            patient_list.add(x, patient)
-            return patient_list
+            else:
+                patient_list.add(x, patient)
+                return patient_list
+        
+    def urgent_first(self, patient_list, patient):
+        """Prioritize patients with higher levels of urgency.
+        """
+        # traverse the queue
+        for x in range(0, self.size()):
+            # if the treatment time of the current patient is longer
+            if patient.levelOfUrgency <= patient_list[x].levelOfUrgency:
+                # if we have traversed the complete queue
+                if x == (self.size() - 1):
+                    # add the patient at the end
+                    patient_list.add(x + 1, patient)
+                else:
+                    continue
+            else:
+                patient_list.add(x, patient)
+                return patient_list
+        
