@@ -80,13 +80,37 @@ class Patient:
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_PRIVATE,
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_OTHER,
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_UNINSURED])
+        
+        
         # find the mean of the waiting time
-        self.calculated_mean_hospital_time = self._calc_mean_wait_time()
+        # self.calculated_mean_hospital_time = self._calc_mean_wait_time()
         # self.actual_hospital_time_min = something...
+        
+        # This is the level of urgency which will affect the treatment and wait time.
+        # Source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
+        self.levelOfUrgency = np.random.choice(np.range(1, 6))
+        
+    """This is a method to calculate the treament time of a patient. Treatment time is defined as the difference 
+    between the time the patient had initial contact with a physician, physician assistant, or nurse practitioner 
+    and the time the patient was discharged from the ED to another hospital unit or to the patient's residence.
+    Please refer to the source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm"""
+    def _calc_treatment_time(self):
+        # I make an assumption here that when the patient is served or enter the exam room, this means they have
+        # contact with doctor.
+        self.treatment_time = self.time_exited - self.time_served 
+        return self.treatment_time
 
-    def _calc_mean_wait_time(self):
+    """This is a method to calculate the wait time of a patient. Wait time is defined as the difference 
+        between the time of arrival in the ED and the time the patient had initial contact with a physician, physician 
+        assistant, or nurse practitioner.
+        Please refer to the source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
+    """
+    def _calc_wait_time(self):
         # TODO: Fix to give a realistic wait time
-        return PatientConstant.MEAN_ALL_VISITS
+        # I make an assumption here that the time when a patient is in the queue is the time when they arrive at ER.
+        self.wait_time = self.time_served - self.time_queued
+        return self.wait_time
+        #return PatientConstant.MEAN_ALL_VISITS
 
     def queue(self, queue_time):
         """Enqueue a patient
@@ -113,3 +137,5 @@ class Patient:
                 timedelta(
                     minutes=self.calculated_mean_hospital_time)) and \
                self.seen_by_doctor
+    
+
