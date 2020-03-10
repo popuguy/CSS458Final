@@ -105,9 +105,10 @@ class Patient:
         self.treatment_time = self.time_exited - self.time_served 
         
         # Caculate the treatment according to patient's attribute
-        self.treatment_time *= PatientConstant.RATE_GENDER[self.sex] *
-                            \ PatientConstant.RATE_RACE[self.race] *
-                            \ PatientConstant.RACE_INSURANCE[self.insurance]
+        self.treatment_time *= PatientConstant.RATE_GENDER[self.sex] * \
+                            PatientConstant.RATE_RACE[self.race] * \
+                            PatientConstant.RATE_INSURANCE[self.insurance] * \
+                            PatientConstant.RATE_AGE[self.age]
         
         return self.treatment_time
 
