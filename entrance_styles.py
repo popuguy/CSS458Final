@@ -49,44 +49,33 @@ class PatientEntranceStyles:
         :param peak_num_patients_per_hour: Most patients per hour
         :param min_num_patients_per_hour: Fewest patients per hour
         """
+        time_delta_mins = self._time_delta_to_minutes(time_delta)
+        time_from_start_peak_mins = self._time_delta_to_minutes(time_from_start_peak)
+        num_loops_at_peak = time_from_start_peak_mins / time_delta_mins
+        general_pph_slope = (peak_num_patients_per_hour - min_num_patients_per_hour) / num_loops_at_peak
+        if num_loops < num_loops_at_peak:
+            cur_num_patients_per_hour = min_num_patients_per_hour + (general_pph_slope * num_loops)
+            print (cur_num_patients_per_hour, "cur_num_patients_per_hour")
+            cur_num_patients_per_min = cur_num_patients_per_hour / 60
 
-        # update patients to generate
-        # give int number there
-        # time_until_peak = time_from_start_peak - (num_loops * time_delta)
-        # Slope is rise / run
-        after_peak = num_loops * time_delta > time_from_start_peak
-        if after_peak:
-            # Increase in patients per hour, per time_delta
-            before_peak = ((peak_num_patients_per_hour -
-                            min_num_patients_per_hour) /
-                           time_from_start_peak.total_seconds() / 60) * \
-                          self._time_delta_to_minutes(time_delta)
-            print(before_peak)
-            cur_patients_per_hour = peak_num_patients_per_hour - \
-                                    before_peak * num_loops
-            cur_patients_per_min = cur_patients_per_hour / 60
             mins_elapsed = time_delta.total_seconds() / 60
 
-            self.patients_to_generate += mins_elapsed * cur_patients_per_min
+            self.patients_to_generate += mins_elapsed * cur_num_patients_per_min
             num_new_generate = int(self.patients_to_generate)
 
             self.patients_to_generate -= int(self.patients_to_generate)
 
             return num_new_generate
-        # Increase in patients per hour, per time_delta
-        before_peak = ((peak_num_patients_per_hour -
-                        min_num_patients_per_hour) /
-                       time_from_start_peak.total_seconds() / 60) * \
-                      self._time_delta_to_minutes(time_delta)
-        print(before_peak)
-        cur_patients_per_hour = min_num_patients_per_hour + \
-                                before_peak * num_loops
-        cur_patients_per_min = cur_patients_per_hour / 60
-        mins_elapsed = time_delta.total_seconds() / 60
+        else:
+            cur_num_patients_per_hour = peak_num_patients_per_hour - (general_pph_slope * (num_loops % num_loops_at_peak))
+            print(cur_num_patients_per_hour, "cur_num_patients_per_hour")
+            cur_num_patients_per_min = cur_num_patients_per_hour / 60
 
-        self.patients_to_generate += mins_elapsed * cur_patients_per_min
-        num_new_generate = int(self.patients_to_generate)
+            mins_elapsed = time_delta.total_seconds() / 60
 
-        self.patients_to_generate -= int(self.patients_to_generate)
+            self.patients_to_generate += mins_elapsed * cur_num_patients_per_min
+            num_new_generate = int(self.patients_to_generate)
 
-        return num_new_generate
+            self.patients_to_generate -= int(self.patients_to_generate)
+
+            return num_new_generate
