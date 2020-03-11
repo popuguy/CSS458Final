@@ -25,8 +25,7 @@ class Patient:
         self.infected = False
         self.infectious = False
 
-        # TODO: MAKE THIS REAL
-        self.calculated_mean_hospital_time = PatientConstant.MEAN_ALL_VISITS
+        # self.calculated_mean_hospital_time = PatientConstant.MEAN_ALL_VISITS
         self.status = PatientStatus.UNQUEUED  # keep track of where a patient is in a queue
         self.time_queued = None  # the time when a patient is in the queue
         self.time_served = None  # the time when a patient is served, or enter the exam room
@@ -88,9 +87,14 @@ class Patient:
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_OTHER,
                                              PatientConstant.SOURCE_DATA_PORTION_INSURANCE_UNINSURED])
 
-        # find the mean of the waiting time
-        # self.calculated_mean_hospital_time = self._calc_mean_wait_time()
-        # self.actual_hospital_time_min = something...
+        # Calculated mean hospital time is an estimate of treatment time for algorithms
+        self.calculated_mean_hospital_time = self._calc_treatment_time()
+        print(self.calculated_mean_hospital_time, "calcd mean hosp time for patient")
+
+        # Generated hospital time is the simulation-generated actual time the
+        # patient will take to finish treatment in an exam room as long as a
+        # doctor has visited during the time period.
+        self.generated_hospital_time = self._generate_actual_treatment_time()
 
         # This is the level of urgency which will affect the treatment and wait time.
         # Source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
@@ -101,6 +105,10 @@ class Patient:
             print("Infected patient generated!")
             self.infected = True
             self.infectious = True
+
+    def _generate_actual_treatment_time(self):
+        # TODO: replace with something a little more random.
+        return self._calc_treatment_time()
 
     def _calc_treatment_time(self):
         """This is a method to calculate the treatment time of a patient.
@@ -114,12 +122,16 @@ class Patient:
         """
         # I make an assumption here that when the patient is served or enter the exam room, this means they have
         # contact with doctor.
-        self.treatment_time = self.time_exited - self.time_served
+        # self.treatment_time = self.time_exited - self.time_served
+        self.treatment_time = PatientConstant.MEAN_ALL_VISITS
 
         # Calculate the treatment according to patient's attribute
-        self.treatment_time *= PatientConstant.RATE_GENDER[self.sex]
-        self.treatment_time *= PatientConstant.RATE_RACE[self.race]
-        self.treatment_time *= PatientConstant.RACE_INSURANCE[self.insurance]
+        if self.sex is PatientSex.MALE:
+            self.treatment_time *= PatientConstant.RATE_GENDER_MALE
+        else:
+            self.treatment_time *= PatientConstant.RATE_GENDER_FEMALE
+        self.treatment_time *= PatientConstant.RATE_RACE_DICT[self.race]
+        self.treatment_time *= PatientConstant.RATE_INSURANCE_DICT[self.insurance]
 
         return self.treatment_time
 

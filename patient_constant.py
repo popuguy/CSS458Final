@@ -88,7 +88,7 @@ class PatientConstant:
     # - Patient's gender attribute
     RATE_GENDER_MALE = 187.4 / MEAN_ALL_VISITS
     RATE_GENDER_FEMALE = 202.8 / MEAN_ALL_VISITS
-    RATE_GENDER = [RATE_GENDER_MALE, RATE_GENDER_FEMALE]
+    # RATE_GENDER = [RATE_GENDER_MALE, RATE_GENDER_FEMALE]
 
     # - Patient's race attribute
     RATE_RACE_WHITE = 190.6 / MEAN_ALL_VISITS
@@ -97,8 +97,11 @@ class PatientConstant:
     RATE_RACE_ASIAN = 203.8 / MEAN_ALL_VISITS
     RATE_RACE_NATIVE = 204.7 / MEAN_ALL_VISITS
     RATE_RACE_OTHER = 193.8 / MEAN_ALL_VISITS
-    RATE_RACE = [RATE_RACE_WHITE, RATE_RACE_BLACK, RATE_RACE_HISPANIC, \
-                 RATE_RACE_ASIAN, RATE_RACE_NATIVE, RATE_RACE_OTHER]
+    # RATE_RACE = [RATE_RACE_WHITE, RATE_RACE_BLACK, RATE_RACE_HISPANIC, \
+    #              RATE_RACE_ASIAN, RATE_RACE_NATIVE, RATE_RACE_OTHER]
+    RATE_RACE_DICT = {PatientRace.WHITE: RATE_RACE_WHITE, PatientRace.BLACK: RATE_RACE_BLACK,
+                      PatientRace.HISPANIC: RATE_RACE_HISPANIC, PatientRace.ASIAN: RATE_RACE_ASIAN,
+                      PatientRace.NATIVE: RATE_RACE_NATIVE, PatientRace.OTHER: RATE_RACE_OTHER}
 
     # - Patient's insurance coverage attribute
     RATE_INSURANCE_MEDICARE = 237.7 / MEAN_ALL_VISITS
@@ -109,6 +112,11 @@ class PatientConstant:
     RATE_INSURANCE = [RATE_INSURANCE_MEDICARE, RATE_INSURANCE_MEDICAID,
                       RATE_INSURANCE_PRIVATE, RATE_INSURANCE_OTHER,
                       RATE_INSURANCE_UNINSURED]
+    RATE_INSURANCE_DICT = {PatientInsurance.MEDICARE: RATE_INSURANCE_MEDICARE,
+                           PatientInsurance.MEDICAID: RATE_INSURANCE_MEDICAID,
+                           PatientInsurance.PRIVATE: RATE_INSURANCE_PRIVATE,
+                           PatientInsurance.OTHER: RATE_INSURANCE_OTHER,
+                           PatientInsurance.UNINSURED: RATE_INSURANCE_UNINSURED}
 
     # ------------------ Portion of patients with attributes -----------------
 
