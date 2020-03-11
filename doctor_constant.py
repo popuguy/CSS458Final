@@ -25,3 +25,4 @@ class DoctorConstant:
     # Source:
     # https://www.statista.com/statistics/250219/us-physicians-opinion-about-their-compensation/
     AVG_TIME_SPENT_WITH_PATIENT = 20  # Minutes
+    PORTION_TIME_SPENT_WITH_PATIENT = 0.25

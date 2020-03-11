@@ -1,7 +1,16 @@
+import random
+
 from doctor_constant import *
 from datetime import timedelta
 import datetime
 
+
+def time_delta_to_minutes(time_delta):
+    """Accurate to one second time delta in minutes returned.
+    :param time_delta A datetime.timedelta object
+    :returns A float of minutes in the time delta
+    """
+    return (time_delta.days * 24 * 60) + (time_delta.seconds / 60)
 
 class Doctor:
     next_id = 0
@@ -17,8 +26,27 @@ class Doctor:
         self.time_entered_exam_room = entry_time
 
     def exit_exam_room(self):
-        self.state = DoctorState.READY
+        self.state = DoctorState.OTHER
         self.time_entered_exam_room = None
+
+    def update_activity(self, time_delta):
+        """Will be called in simulation to transition between a state of
+        readiness to see patients in exam rooms and working on other activities
+        at a rate defined in DoctorConstant.
+        :param time_delta: The amount of time since last update_activity was
+        called.
+        """
+        if self.state == DoctorState.IN_PATIENT_EXAM_ROOM:
+            return
+        # We have the amount of time a doctor stays in patient room as DoctorConstant.PORTION_TIME_SPENT_WITH_PATIENT
+        # We have the length of time a doctor stays in patient room as DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT
+        # Thus, for average time spent doing OTHER we use PORTION * all time = TIME_SPENT_WITH_PATIENT
+        total_time_unit = DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT / DoctorConstant.PORTION_TIME_SPENT_WITH_PATIENT
+        time_spent_doing_other = total_time_unit - DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT
+        chance_change_task = time_delta_to_minutes(time_delta) / time_spent_doing_other
+        if self.state == DoctorState.OTHER and random.random() < chance_change_task:
+            self.state = DoctorState.READY
+
 
     def has_completed_patient_visit(self, cur_time):
         """Check if exam room visit complete.

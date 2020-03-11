@@ -70,6 +70,11 @@ def simulate_waiting(time_span=timedelta(days=1),
                 print("Served patient", cur_patient.id)
             cur_exam_room.patient = cur_patient
 
+        # --- UPDATE DOCTOR ACTIVITIES ---
+
+        for doctor in doctors:
+            doctor.update_activity(time_delta)
+
         # --- FILLING WITH DOCTORS ---
         doctors_available = []
         for doctor in doctors:
@@ -114,7 +119,7 @@ def simulate_waiting(time_span=timedelta(days=1),
             if patient.infected:
                 num_infected_waiting += 1
         for patient in patients_waiting:
-            if patient.try_contract_infection(time_delta, num_infected_waiting):
+            if not patient.infected and patient.try_contract_infection(time_delta, num_infected_waiting):
                 print("Patient infected!!")
 
         # For different configurations of the simulation, patients will be
