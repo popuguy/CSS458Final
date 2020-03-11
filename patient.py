@@ -170,10 +170,12 @@ class Patient:
         self.time_exited = cur_time
         self.status = PatientStatus.EXITING
 
+        print("Patient exiting. Examination took", self.time_exited - self.time_served)
+
     def has_completed_visit(self, cur_time):
         """Get the total time during a patient's visit by adding waiting time
         and consultation time
         """
-        return (cur_time <= self.time_served +
+        return (cur_time >= self.time_served +
                 timedelta(minutes=self.calculated_mean_hospital_time)) and \
                self.seen_by_doctor
