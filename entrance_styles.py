@@ -55,7 +55,6 @@ class PatientEntranceStyles:
         general_pph_slope = (peak_num_patients_per_hour - min_num_patients_per_hour) / num_loops_at_peak
         if num_loops < num_loops_at_peak:
             cur_num_patients_per_hour = min_num_patients_per_hour + (general_pph_slope * num_loops)
-            print (cur_num_patients_per_hour, "cur_num_patients_per_hour")
             cur_num_patients_per_min = cur_num_patients_per_hour / 60
 
             mins_elapsed = time_delta.total_seconds() / 60
@@ -67,8 +66,9 @@ class PatientEntranceStyles:
 
             return num_new_generate
         else:
-            cur_num_patients_per_hour = peak_num_patients_per_hour - (general_pph_slope * (num_loops % num_loops_at_peak))
-            print(cur_num_patients_per_hour, "cur_num_patients_per_hour")
+            cur_num_patients_per_hour = peak_num_patients_per_hour - \
+                                        (general_pph_slope *
+                                         (num_loops % num_loops_at_peak))
             cur_num_patients_per_min = cur_num_patients_per_hour / 60
 
             mins_elapsed = time_delta.total_seconds() / 60

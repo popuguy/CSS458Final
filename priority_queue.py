@@ -37,6 +37,9 @@ class PriorityQueue:
     def get_length(self):
         return len(self.patients)
 
+    def get_queue_patients(self):
+        return self.patients
+
     # from priority_queue import PriorityQueue as q
 
     # This is what I did so far. Please check the code if it's correct and modified it to fit our model. Thank you.

@@ -66,6 +66,22 @@ class PatientConstant:
     Calculating the rate difference from the mean of all visits' time duration
     of difference attributes 
     """
+    PORTION_INFECTED = 0.1
+    # Slight source:
+    # https://www.fredhutch.org/en/news/center-news/2015/12/separating-fact-from-fiction-about-colds-and-flu.html
+    #
+    # Mostly just guessed numbers about transmission probability
+    # From a story, 10 hours in close proximity to a person sick with a cold was enough to infect
+    # Assume that is a base and the disease in question has some multiplier of infectiousness related to that base
+    #
+    # Another source:
+    # https://arstechnica.com/science/2020/03/dont-panic-the-comprehensive-ars-technica-guide-to-the-coronavirus/2/#h3
+    # 2-2.5 R0 number for COVID-19 as opposed to 1.3 for seasonal flu
+    INFECTIOUSNESS_MULTIPLIER = 2.25 / 1.3
+    BASE_INFECTIOUSNESS = 300  # Minutes for 50% chance at 1.3 R0
+    DISEASE_INFECTION_CHANCE_PER_MINUTE = 0.5 / (BASE_INFECTIOUSNESS *
+                                                 (1 / INFECTIOUSNESS_MULTIPLIER))
+
     MEAN_ALL_VISITS = 195.7  # - mean duration of
 
     # - Calculating different rate of visit duration for each attribute

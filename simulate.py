@@ -85,7 +85,7 @@ def simulate_waiting(time_span=timedelta(days=1),
                 exam_r.doctor = doctors_available[-1]
                 if verbose:
                     print("Doctor", exam_r.doctor.id, "entered for patient",
-                      exam_r.patient.id)
+                          exam_r.patient.id)
                 doctors_available = doctors_available[:-1]
 
         # --- DOCTOR VISIT COMPLETIONS ---
@@ -95,7 +95,7 @@ def simulate_waiting(time_span=timedelta(days=1),
                 exam_r.doctor.exit_exam_room()
                 if verbose:
                     print("Doctor", exam_r.doctor.id, "left for patient",
-                      exam_r.patient.id)
+                          exam_r.patient.id)
                 exam_r.patient.seen_by_doctor = True
 
         # --- VACATE ROOMS APPROPRIATELY ---
@@ -107,6 +107,16 @@ def simulate_waiting(time_span=timedelta(days=1),
                     print("Patient", exam_r.patient.id, "left")
                 exam_r.reset()
 
+        # --- GIVE INFECTIONS ---
+        patients_waiting = waiting_queue.get_queue_patients()
+        num_infected_waiting = 0
+        for patient in patients_waiting:
+            if patient.infected:
+                num_infected_waiting += 1
+        for patient in patients_waiting:
+            if patient.try_contract_infection(time_delta, num_infected_waiting):
+                print("Patient infected!!")
+
         # For different configurations of the simulation, patients will be
         # added at different intervals here
         patients_to_generate = entrance_style.rise_and_fall_linear(
@@ -115,7 +125,6 @@ def simulate_waiting(time_span=timedelta(days=1),
             patient = Patient()
             waiting_queue.add(patient, cur_datetime)
             patients_visiting.append(patient)
-
 
         # mins_elapsed = time_delta.total_seconds() / 60
         #

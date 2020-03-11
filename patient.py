@@ -20,6 +20,11 @@ class Patient:
         Source:
         https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
         """
+
+        # Coronavirus or some other infectious disease
+        self.infected = False
+        self.infectious = False
+
         # TODO: MAKE THIS REAL
         self.calculated_mean_hospital_time = PatientConstant.MEAN_ALL_VISITS
         self.status = PatientStatus.UNQUEUED  # keep track of where a patient is in a queue
@@ -91,6 +96,12 @@ class Patient:
         # Source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
         self.levelOfUrgency = np.random.choice(np.arange(1, 6))
 
+        if random.random() < PatientConstant.PORTION_INFECTED:
+
+            print("Infected patient generated!")
+            self.infected = True
+            self.infectious = True
+
     def _calc_treatment_time(self):
         """This is a method to calculate the treatment time of a patient.
         Treatment time is defined as the difference between the time 
@@ -124,6 +135,22 @@ class Patient:
         self.wait_time = self.time_served - self.time_queued
         return self.wait_time
         # return PatientConstant.MEAN_ALL_VISITS
+
+    def try_contract_infection(self, time_delta, num_infected_near):
+        chance_to_contract = \
+            PatientConstant.DISEASE_INFECTION_CHANCE_PER_MINUTE * \
+            self._time_delta_to_minutes(time_delta) * num_infected_near
+        if random.random() < chance_to_contract:
+            self.infected = True
+            return True
+        return False
+
+    def _time_delta_to_minutes(self, time_delta):
+        """Accurate to one second time delta in minutes returned.
+        :param time_delta A datetime.timedelta object
+        :returns A float of minutes in the time delta
+        """
+        return (time_delta.days * 24 * 60) + (time_delta.seconds / 60)
 
     def queue(self, queue_time):
         """Enqueue a patient
