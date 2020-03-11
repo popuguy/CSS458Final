@@ -39,7 +39,7 @@ def simulate_waiting(time_span=timedelta(days=1),
     cur_datetime = datetime.datetime(2020, 1, 1)  # SIMULATION CURRENT TIME
     end_datetime = start_datetime + time_span
 
-    patients_to_generate = 0.0
+    # patients_to_generate = 0.0
     # Place for all patients that came through the clinic. Used for
     # conclusions, not the actual simulation.
     patients_visiting = []
@@ -109,22 +109,30 @@ def simulate_waiting(time_span=timedelta(days=1),
 
         # For different configurations of the simulation, patients will be
         # added at different intervals here
-        mins_elapsed = time_delta.total_seconds() / 60
-
-        patients_per_minute = HospitalConstant.PATIENTS_PER_HOUR / 60.0
-
-        patients_to_generate += mins_elapsed * patients_per_minute
-        unqueued_patients = [Patient() for _
-                             in range(int(patients_to_generate))]
-
-        patients_to_generate -= int(patients_to_generate)
-
-        print("it would gen", entrance_style.rise_and_fall_linear(num_loops, time_delta), "patients here")
-
-        # --- QUEUE PATIENTS ---
-        for patient in unqueued_patients:
+        patients_to_generate = entrance_style.rise_and_fall_linear(
+            num_loops, time_delta)
+        for i in range(patients_to_generate):
+            patient = Patient()
             waiting_queue.add(patient, cur_datetime)
             patients_visiting.append(patient)
+
+
+        # mins_elapsed = time_delta.total_seconds() / 60
+        #
+        # patients_per_minute = HospitalConstant.PATIENTS_PER_HOUR / 60.0
+        #
+        # patients_to_generate += mins_elapsed * patients_per_minute
+        # unqueued_patients = [Patient() for _
+        #                      in range(int(patients_to_generate))]
+        #
+        # patients_to_generate -= int(patients_to_generate)
+        #
+        # print("it would gen", entrance_style.rise_and_fall_linear(num_loops, time_delta), "patients here")
+        #
+        # # --- QUEUE PATIENTS ---
+        # for patient in unqueued_patients:
+        #     waiting_queue.add(patient, cur_datetime)
+        #     patients_visiting.append(patient)
 
     # Conclusions
     total_wait_time = 0
