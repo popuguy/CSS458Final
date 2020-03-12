@@ -288,8 +288,8 @@ def compareDoctorsQuantity():
 
 if __name__ == '__main__':
 
-#    compareQueuingMethod()
-#    compareExamRoomsQuantity()
+    compareQueuingMethod()
+    compareExamRoomsQuantity()
     compareDoctorsQuantity()
     
     
