@@ -455,8 +455,7 @@ def compareDoctorTimeSpent():
     
     iteration = 50
     # Mean of all average waiting
-    mean_avg_wait_time1 = N.arange(HospitalConstant.NUM_DOCTORS)
-    mean_avg_wait_time2 = N.arange(HospitalConstant.NUM_DOCTORS)
+    mean_avg_wait_time = N.arange(HospitalConstant.NUM_DOCTORS)
     portionChange = 0.25
     portion_time = []
     portion_time.append(portionChange)
@@ -464,20 +463,15 @@ def compareDoctorTimeSpent():
 
     for i in range(HospitalConstant.NUM_DOCTORS):
         avg_wait_time = N.arange(iteration)
-        avg_wait_time1 = N.arange(iteration)
 
         for j in range(iteration):
             avg_wait_time[j] = \
                 simulate_waiting(portion_time_doc_spend = True, portion=portionChange)
-            avg_wait_time1[j] = \
-                simulate_waiting()
                 
             portionChange += 0.20
             portion_time.append(portionChange)
-        mean_avg_wait_time1[i] = N.mean(avg_wait_time)
-        mean_avg_wait_time2[i] = N.mean(avg_wait_time1)
+        mean_avg_wait_time[i] = N.mean(avg_wait_time)
     
-    #xi = list(range(portion_time))
     plt.figure(2)
     plt.xticks(portion_time)
     plt.plot(mean_avg_wait_time1)
@@ -496,7 +490,7 @@ def compareDoctorTimeSpent():
 
 # 5 Check number of increased exam rooms and doctors equal to prioritization change
 # 6 Performance increase per adding doctors AND exam rooms
-#
+# 8 
 #
 # Next metrics:
 # 7 Average waiting time as number of patients per hour increases
