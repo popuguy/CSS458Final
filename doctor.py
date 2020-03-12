@@ -80,3 +80,28 @@ class Doctor:
                 timedelta(minutes=DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT):
             return True
         return False
+    
+    def update_activity_change_portion_time(self, time_delta, portion):
+        """Will be called in simulation to transition between a state of
+        readiness to see patients in exam rooms and working on other activities
+        at a rate defined in DoctorConstant.
+        :param time_delta: The amount of time since last update_activity was
+        called.
+        """
+        if self.state == DoctorState.IN_PATIENT_EXAM_ROOM:
+            return
+        # We have the amount of time a doctor stays in patient room as
+        # DoctorConstant.PORTION_TIME_SPENT_WITH_PATIENT
+        # We have the length of time a doctor stays in patient room as
+        # DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT
+        # Thus, for average time spent doing OTHER we use PORTION * all time
+        # = TIME_SPENT_WITH_PATIENT
+        total_time_unit = DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT / \
+                          portion
+        time_spent_doing_other = total_time_unit - \
+                                 DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT
+        chance_change_task = time_delta_to_minutes(time_delta) / \
+                             time_spent_doing_other
+        if self.state == DoctorState.OTHER and random.random() < \
+                chance_change_task:
+            self.state = DoctorState.READY
