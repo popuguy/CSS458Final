@@ -1,13 +1,16 @@
 from hospital_constant import HospitalConstant
 from datetime import timedelta
 
-
+"""This class generates a specific number of patients to enter the ER for each hour interval.
+"""
 class PatientEntranceStyles:
+    
+    # Constructor
     def __init__(self):
         self.patients_to_generate = 0.0
-
+        
     def _time_delta_to_minutes(self, time_delta):
-        """Accurate to one second time delta in minutes returned.
+        """Generates the hour interval. Accurate to one second time delta in minutes returned.
         :param time_delta A datetime.timedelta object
         :returns A float of minutes in the time delta
         """
