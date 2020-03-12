@@ -21,7 +21,7 @@ def time_delta_to_minutes(time_delta):
 
 def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3),
-                     verbose=False):
+                     verbose=True):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
@@ -47,6 +47,7 @@ def simulate_waiting(time_span=timedelta(days=1),
     patients_visiting = []
 
     num_loops = 0
+    total_num_patients_infected = 0
 
     # --- MAIN LOOP FOR SIMULATION ---
     while cur_datetime < end_datetime:
@@ -87,7 +88,7 @@ def simulate_waiting(time_span=timedelta(days=1),
             if len(doctors_available) < 1:
                 break
             if exam_r.doctor is None and exam_r.patient is not None and \
-                    exam_r.patient.seen_by_doctor is not True:
+                    not exam_r.patient.seen_by_doctor:
                 doctors_available[-1].enter_exam_room(cur_datetime)
                 exam_r.doctor = doctors_available[-1]
                 if verbose:
@@ -99,10 +100,12 @@ def simulate_waiting(time_span=timedelta(days=1),
         for exam_r in exam_rooms:
             if exam_r.doctor is not None and \
                     exam_r.doctor.has_completed_patient_visit(cur_datetime):
-                exam_r.doctor.exit_exam_room()
+
                 if verbose:
                     print("Doctor", exam_r.doctor.id, "left for patient",
                           exam_r.patient.id)
+                # exam_r.doctor.exit_exam_room()
+                exam_r.make_doctor_exit()
                 exam_r.patient.seen_by_doctor = True
 
         # --- VACATE ROOMS APPROPRIATELY ---
@@ -122,6 +125,7 @@ def simulate_waiting(time_span=timedelta(days=1),
                 num_infected_waiting += 1
         for patient in patients_waiting:
             if not patient.infected and patient.try_contract_infection(time_delta, num_infected_waiting):
+                total_num_patients_infected += 1
                 print("Patient infected!!")
 
         # For different configurations of the simulation, patients will be
@@ -166,6 +170,8 @@ def simulate_waiting(time_span=timedelta(days=1),
     avg_wait_time = total_wait_time / total_served_patients
     print("Average wait time for simulation:", avg_wait_time, "minutes.")
 
+    # Number of patients infected
+    print(total_num_patients_infected, "total_num_patients_infected")
 
 if __name__ == '__main__':
     simulate_waiting()

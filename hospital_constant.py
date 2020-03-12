@@ -24,7 +24,7 @@ class HospitalConstant:
 
     # Constants for linear inc/dec style patient entrance
     # Reference data: https://www.beckershospitalreview.com/quality/how-healthy-is-your-emergency-department.html
-    DEFAULT_PEAK_PATIENTS = 13
+    DEFAULT_PEAK_PATIENTS = 2.1
     DEFAULT_MIN_PATIENTS = 1.8
     
 # ===== end file =====

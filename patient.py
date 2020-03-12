@@ -89,7 +89,7 @@ class Patient:
 
         # Calculated mean hospital time is an estimate of treatment time for algorithms
         self.calculated_mean_hospital_time = self._calc_treatment_time()
-        print(self.calculated_mean_hospital_time, "calcd mean hosp time for patient")
+        # print(self.calculated_mean_hospital_time, "calcd mean hosp time for patient")
 
         # Generated hospital time is the simulation-generated actual time the
         # patient will take to finish treatment in an exam room as long as a
