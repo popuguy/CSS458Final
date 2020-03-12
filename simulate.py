@@ -9,6 +9,7 @@ from doctor import Doctor
 from doctor_constant import *
 from patient import Patient
 from entrance_styles import PatientEntranceStyles
+import numpy as N
 
 
 def time_delta_to_minutes(time_delta):
@@ -21,11 +22,11 @@ def time_delta_to_minutes(time_delta):
 
 def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3),
-                     verbose=True):
+                     verbose=False,
+                     queue_method=None):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
-
     :param verbose: If True, print info in simulation.
     :param time_span: Length of full simulation.
     :param time_delta: Time between movements in simulation.
@@ -34,9 +35,12 @@ def simulate_waiting(time_span=timedelta(days=1),
     exam_rooms = [ExamRoom() for _ in range(HospitalConstant.EXAM_ROOMS)]
 
     entrance_style = PatientEntranceStyles()
-
-    # waiting_queue = PriorityQueue()
-    waiting_queue = PriorityQueue(alg=QueueingAlgorithm.fast_first)
+#    print("queue_method = ", queue_method)
+    if (queue_method == "first_come_first_serve"):
+        waiting_queue = PriorityQueue()
+    elif (queue_method == "prioritize_treatment_time"):
+        waiting_queue = PriorityQueue(alg=QueueingAlgorithm.fast_first)
+    
     start_datetime = datetime.datetime(2020, 1, 1)
     cur_datetime = datetime.datetime(2020, 1, 1)  # SIMULATION CURRENT TIME
     end_datetime = start_datetime + time_span
@@ -126,7 +130,8 @@ def simulate_waiting(time_span=timedelta(days=1),
         for patient in patients_waiting:
             if not patient.infected and patient.try_contract_infection(time_delta, num_infected_waiting):
                 total_num_patients_infected += 1
-                print("Patient infected!!")
+                if verbose: 
+                    print("Patient infected!!")
 
         # For different configurations of the simulation, patients will be
         # added at different intervals here
@@ -168,10 +173,55 @@ def simulate_waiting(time_span=timedelta(days=1),
         wait_time_patient_mins = time_delta_to_minutes(wait_time_patient_delta)
         total_wait_time += wait_time_patient_mins
     avg_wait_time = total_wait_time / total_served_patients
-    print("Average wait time for simulation:", avg_wait_time, "minutes.")
+#    print("total_served_patients = ", total_served_patients)
+#    print("Average wait time for simulation:", avg_wait_time, "minutes.")
 
     # Number of patients infected
-    print(total_num_patients_infected, "total_num_patients_infected")
+#    print(total_num_patients_infected, "total_num_patients_infected")
+    
+    return avg_wait_time#, total_served_patients
+    
+def compareQueuingMethod():
+    """This function compare average waiting time of 2 queuing methods
+    "first come, first served" and "process queueing by CPU burst time," 
+    which prioritize patients with faster treatment time
+    
+    """
+    iteration = 100
+    
+    # Average waiting-time using different queuing methods
+    waittime_first_come_first_serve = N.zeros(iteration, dtype='d')
+    waittime_prioritize_treatment_time = N.zeros(iteration, dtype='d')
+#    time = N.arange(iteration)
+    for i in range(iteration):
+        waittime_first_come_first_serve[i] = simulate_waiting(queue_method = "first_come_first_serve")
+        waittime_prioritize_treatment_time[i] = simulate_waiting(queue_method = "prioritize_treatment_time")
+
+    avg_waittime_first_come_first_serve = N.mean(waittime_first_come_first_serve)
+    avg_waittime_prioritize_treatment_time = N.mean(waittime_prioritize_treatment_time)
+    
+    print("avg_waittime_first_come_first_serve = ", avg_waittime_first_come_first_serve)
+    print("avg_waitime_prioritize_treatment_time = ", avg_waittime_prioritize_treatment_time)
+    
+#    plt.figure(1)
+#    plt.plot(waittime_first_come_first_serve, time)
+#    plt.xlabel("waittime_first_come_first_serve")
+#    plt.ylabel("Time")
+#    plt.show()
+#    
+#    plt.figure(2)
+#    plt.plot(waittime_prioritize_treatment_time, time)
+#    plt.xlabel("waittime_prioritize_treatment_time")
+#    plt.ylabel("Time")
+#    plt.show()
+    
+    
+    
 
 if __name__ == '__main__':
-    simulate_waiting()
+#    simulate_waiting(queue_method = "first_come_first_serve")
+#    simulate_waiting(queue_method = "prioritize_treatment_time")
+    compareQueuingMethod()
+    
+    
+    
