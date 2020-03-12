@@ -59,17 +59,17 @@ class QueueingAlgorithm:
         :return: Ordered patient list with newly added patient
         """
         # traverse the queue
-        for x in range(0, self.size()):
+        for x in range(0, len(patient_list)):
             # if the treatment time of the current patient is longer
             if patient.treatment_time >= patient_list[x].treatment_time:
                 # if we have traversed the complete queue
-                if x == (self.size() - 1):
+                if x == (len(patient_list) - 1):
                     # add the patient at the end
-                    patient_list.add(x + 1, patient)
+                    patient_list.append(x + 1, patient)
                 else:
                     continue
             else:
-                patient_list.add(x, patient)
+                patient_list.insert(x, patient)
                 return patient_list
 
     @staticmethod
@@ -77,16 +77,15 @@ class QueueingAlgorithm:
         """Prioritize patients with higher levels of urgency.
         """
         # traverse the queue
-        for x in range(0, self.size()):
+        for x in range(0, len(patient_list)):
             # if the treatment time of the current patient is longer
             if patient.levelOfUrgency <= patient_list[x].levelOfUrgency:
                 # if we have traversed the complete queue
-                if x == (self.size() - 1):
+                if x == (len(patient_list) - 1):
                     # add the patient at the end
-                    patient_list.add(x + 1, patient)
+                    patient_list.insert(x + 1, patient)
                 else:
                     continue
             else:
                 patient_list.add(x, patient)
                 return patient_list
-        
