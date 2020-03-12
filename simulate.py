@@ -21,7 +21,7 @@ def time_delta_to_minutes(time_delta):
     return (time_delta.days * 24 * 60) + (time_delta.seconds / 60)
 
 
-def simulate_waiting(time_span=timedelta(days=5),
+def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3),
                      verbose=False,
                      queue_method="prioritize_treatment_time",

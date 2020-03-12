@@ -12,8 +12,10 @@
 import numpy as np
 from enum import Enum
 import random as rand
+from simulation_configuration import SimulationConfiguration
 
 #------------------------- Class:  PatientStatus -----------------------
+
 """This class represents the current status of a patient.
 """
 class PatientStatus(Enum):
@@ -160,6 +162,7 @@ class PatientConstant:
     SOURCE_DATA_PORTION_AGE_OVER_74 = SOURCE_DATA_AGE_OVER_74 / \
                                       SOURCE_DATA_TOTAL_AGE
 
+
     # Race attributes (# of people out of total)
 
     SOURCE_DATA_RACE_WHITE = 3335431
@@ -212,3 +215,50 @@ class PatientConstant:
         SOURCE_DATA_INSURANCE_OTHER / SOURCE_DATA_TOTAL_INSURANCE
     SOURCE_DATA_PORTION_INSURANCE_UNINSURED = \
         SOURCE_DATA_INSURANCE_UNINSURED / SOURCE_DATA_TOTAL_INSURANCE
+
+    # ---------- Custom country configuration ----------
+    # Source: https://en.wikipedia.org/wiki/Demographics_of_Italy#Demographic_statistics
+    if SimulationConfiguration.ACTIVE_POPULATION == "IT":
+        SOURCE_DATA_PORTION_AGE_UNDER_15 = 0.1365
+        SOURCE_DATA_PORTION_AGE_15_24 = 0.0961
+        SOURCE_DATA_PORTION_AGE_25_44 = 0.3182
+        SOURCE_DATA_PORTION_AGE_45_64 = 0.2344
+        SOURCE_DATA_PORTION_AGE_65_74 = 0.1453
+        SOURCE_DATA_PORTION_AGE_OVER_74 = 0.0695
+
+        RATE_GENDER_MALE = 0.93 / 1.93
+        RATE_GENDER_FEMALE = 1 / 1.93
+
+        # Sources: https://worldpopulationreview.com/countries/italy-population/
+        # https://thetranslationcompany.com/resources/language-country/italian/ethnic-groups-italy.htm
+        SOURCE_DATA_PORTION_RACE_WHITE = 0.975
+        SOURCE_DATA_PORTION_RACE_BLACK = 0.015
+        SOURCE_DATA_PORTION_RACE_HISPANIC = 0.001
+        SOURCE_DATA_PORTION_RACE_ASIAN = 0
+        SOURCE_DATA_PORTION_RACE_NATIVE = 0
+        SOURCE_DATA_PORTION_RACE_OTHER = 0.009
+    if SimulationConfiguration.ACTIVE_POPULATION == "SEA":
+        # Source: https://en.wikipedia.org/wiki/Demographics_of_Seattle
+        SOURCE_DATA_PORTION_RACE_WHITE = 0.657
+        SOURCE_DATA_PORTION_RACE_BLACK = 0.07
+        SOURCE_DATA_PORTION_RACE_HISPANIC = 0.066
+        SOURCE_DATA_PORTION_RACE_ASIAN = 0.141
+        SOURCE_DATA_PORTION_RACE_NATIVE = 0.004
+        SOURCE_DATA_PORTION_RACE_OTHER = 0.062
+
+        # In the city the population was spread out with 15.6% under the age of
+        # 18, 11.9% from 18 to 24, 38.6% from 25 to 44, 21.9% from 45 to 64,
+        # and 12.0% who were 65 years of age or older
+        #
+        # Data has been fudged around intervals that didn't line up
+
+        SOURCE_DATA_PORTION_AGE_UNDER_15 = 0.126
+        SOURCE_DATA_PORTION_AGE_15_24 = 0.149
+        SOURCE_DATA_PORTION_AGE_25_44 = 0.386
+        SOURCE_DATA_PORTION_AGE_45_64 = 0.219
+        SOURCE_DATA_PORTION_AGE_65_74 = 0.08
+        SOURCE_DATA_PORTION_AGE_OVER_74 = 0.04
+
+        RATE_GENDER_MALE = 0.995 / 1.995
+        RATE_GENDER_FEMALE = 1 / 1.995
+
