@@ -67,6 +67,7 @@ class PatientConstant:
     Calculating the rate difference from the mean of all visits' time duration
     of difference attributes 
     """
+    PLUS_OR_MINUS_PORTION = 0.01
     PORTION_INFECTED = 0.1
     # Slight source:
     # https://www.fredhutch.org/en/news/center-news/2015/12/separating-fact-from-fiction-about-colds-and-flu.html

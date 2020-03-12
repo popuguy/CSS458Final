@@ -101,14 +101,37 @@ class Patient:
         self.levelOfUrgency = np.random.choice(np.arange(1, 6))
 
         if random.random() < PatientConstant.PORTION_INFECTED:
-
-            print("Infected patient generated!")
+            # print("Infected patient generated!")
             self.infected = True
             self.infectious = True
 
     def _generate_actual_treatment_time(self):
-        # TODO: replace with something a little more random.
-        return self._calc_treatment_time()
+        # From the source, this is close-ish to +-1% for each attribute
+
+        plus_or_minus_mean = random.uniform(
+            1 - PatientConstant.PLUS_OR_MINUS_PORTION,
+            1 + PatientConstant.PLUS_OR_MINUS_PORTION)
+
+        self.generated_hospital_time = PatientConstant.MEAN_ALL_VISITS * plus_or_minus_mean
+
+        plus_or_minus_sex = random.uniform(
+            1 - PatientConstant.PLUS_OR_MINUS_PORTION,
+            1 + PatientConstant.PLUS_OR_MINUS_PORTION)
+        # Calculate the treatment according to patient's attribute
+        if self.sex is PatientSex.MALE:
+            self.generated_hospital_time *= PatientConstant.RATE_GENDER_MALE * plus_or_minus_sex
+        else:
+            self.generated_hospital_time *= PatientConstant.RATE_GENDER_FEMALE * plus_or_minus_sex
+        plus_or_minus_race = random.uniform(
+            1 - PatientConstant.PLUS_OR_MINUS_PORTION,
+            1 + PatientConstant.PLUS_OR_MINUS_PORTION)
+        self.generated_hospital_time *= PatientConstant.RATE_RACE_DICT[self.race] * plus_or_minus_race
+        plus_or_minus_insurance = random.uniform(
+            1 - PatientConstant.PLUS_OR_MINUS_PORTION,
+            1 + PatientConstant.PLUS_OR_MINUS_PORTION)
+        self.generated_hospital_time *= PatientConstant.RATE_INSURANCE_DICT[self.insurance] * plus_or_minus_insurance
+
+        return self.generated_hospital_time
 
     def _calc_treatment_time(self):
         """This is a method to calculate the treatment time of a patient.
@@ -182,12 +205,12 @@ class Patient:
         self.time_exited = cur_time
         self.status = PatientStatus.EXITING
 
-        print("Patient exiting. Examination took", self.time_exited - self.time_served)
+        # print("Patient exiting. Examination took", self.time_exited - self.time_served)
 
     def has_completed_visit(self, cur_time):
         """Get the total time during a patient's visit by adding waiting time
         and consultation time
         """
         return (cur_time >= self.time_served +
-                timedelta(minutes=self.calculated_mean_hospital_time)) and \
+                timedelta(minutes=self.generated_hospital_time)) and \
                self.seen_by_doctor
