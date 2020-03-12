@@ -26,7 +26,8 @@ def simulate_waiting(time_span=timedelta(days=5),
                      verbose=False,
                      queue_method="prioritize_treatment_time",
                      number_of_exam_rooms = HospitalConstant.EXAM_ROOMS,
-                     number_of_doctors = HospitalConstant.NUM_DOCTORS):
+                     number_of_doctors = HospitalConstant.NUM_DOCTORS,
+                     setAttributes = True):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
@@ -143,7 +144,7 @@ def simulate_waiting(time_span=timedelta(days=5),
         patients_to_generate = entrance_style.rise_and_fall_linear(
             num_loops, time_delta)
         for i in range(patients_to_generate):
-            patient = Patient()
+            patient = Patient(setAttributes)
             waiting_queue.add(patient, cur_datetime)
             patients_visiting.append(patient)
 
@@ -199,18 +200,18 @@ def compareQueuingMethod():
     # Average waiting-time using different queuing methods
     waittime_first_come_first_serve = N.zeros(iteration, dtype='d')
     waittime_prioritize_treatment_time = N.zeros(iteration, dtype='d')
-#    time = N.arange(iteration)
+
     for i in range(iteration):
         waittime_first_come_first_serve[i] = simulate_waiting(queue_method = "first_come_first_serve")
         waittime_prioritize_treatment_time[i] = simulate_waiting(queue_method = "prioritize_treatment_time")
 
-    avg_waittime_first_come_first_serve = N.mean(waittime_first_come_first_serve)
-    avg_waittime_prioritize_treatment_time = N.mean(waittime_prioritize_treatment_time)
+    mean_waittime_first_come_first_serve = N.mean(waittime_first_come_first_serve)
+    mean_waittime_prioritize_treatment_time = N.mean(waittime_prioritize_treatment_time)
     
     print("'First come, first served' queuing method: ", \
-          round(avg_waittime_first_come_first_serve,1), " minutes")
-    print("'Process queueing by CPU burst timee' queuing method: ", \
-          round(avg_waittime_prioritize_treatment_time,1), " minutes")
+          round(mean_waittime_first_come_first_serve,1), " minutes")
+    print("'Process queueing by CPU burst time' queuing method: ", \
+          round(mean_waittime_prioritize_treatment_time,1), " minutes")
     print()
     
 #    plt.figure(1)
@@ -284,12 +285,50 @@ def compareDoctorsQuantity():
     plt.show()
     print()
     
+def comparePatientsWithoutAttributes():
+    """This function compare average waiting time with of patients with and
+    without taking into account of their attributes
     
+    """
+    print("Comparing patient's average waiting time with and without \
+          taking into account of their attributes...")
+    print("(can take up to 10 seconds)")
+    iteration = 100
+    iteration_step = N.arange(iteration) + 1
+    
+    wait_time_with_attributes = N.zeros(iteration, dtype='d')
+    wait_time_without_attributes = N.zeros(iteration, dtype='d')
+    
+    for i in range(iteration):
+        wait_time_with_attributes[i] = simulate_waiting(setAttributes = True)
+        wait_time_without_attributes[i] = simulate_waiting(setAttributes = False)
+
+    mean_wait_time_with_attributes = N.mean(wait_time_with_attributes)
+    mean_wait_time_without_attributes = N.mean(wait_time_without_attributes)
+    
+    print("Taking into account of attributes: ", \
+          round(mean_wait_time_with_attributes,1), " minutes")
+    print("Without taking into account of attributes: ", \
+          round(mean_wait_time_without_attributes,1), " minutes")
+    print()
+
+    plt.figure(3)
+    plt.plot(iteration_step, wait_time_with_attributes, color='skyblue', label="With attributes")
+    plt.plot(iteration_step, wait_time_without_attributes, color='olive', \
+             linestyle='dashed', label="Without attributes")
+    plt.xlabel("Iteration")
+    plt.ylabel("Average waiting time")
+    plt.title("Average waiting time with and without patient's attributes")
+    plt.legend()
+    plt.show()
+    print()
 
 if __name__ == '__main__':
 
     compareQueuingMethod()
     compareExamRoomsQuantity()
     compareDoctorsQuantity()
+    comparePatientsWithoutAttributes()
+#    simulate_waiting()  #default calling function
     
     

@@ -86,7 +86,9 @@ class PatientConstant:
     
     #Source:
     #https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
-    MEAN_ALL_VISITS = 195.7  # - mean duration of
+    MEAN_ALL_VISITS = 195.7  # - mean duration of all visits' treatment time
+    LOW_MEAN_ALL_VISITS = 194.2
+    HIGH_MEAN_ALL_VISITS = 197.2
 
     # - Calculating different rate of visit duration for each attribute
     # - Patient's gender attribute
