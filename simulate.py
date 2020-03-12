@@ -342,9 +342,92 @@ def comparePatientsWithoutAttributes():
     print()
 
 
+def compareDoctorsPlusExamRoomsQuantity():
+    """This function compares the average waiting time with
+        different number of doctors and exam rooms
+
+        """
+    print("Comparing patient's average waiting time using different" +
+          " number of  and exam rooms...")
+    print("(can take up to 30 seconds)")
+
+    iteration = 30
+    num_of_doctors = N.arange(1, 10) * 5  # Number of doctors
+    exam_rooms = N.arange(1, 10) * 10  # Number of examination rooms
+    # Mean of all average waiting
+    mean_avg_wait_time = N.arange(len(num_of_doctors))
+    # - time in 100 iterations
+
+    for i in range(len(num_of_doctors)):
+        avg_wait_time = N.arange(iteration)
+
+        for j in range(iteration):
+            avg_wait_time[j] = \
+                simulate_waiting(number_of_doctors=num_of_doctors[i],
+                                 number_of_exam_rooms=exam_rooms[i])
+
+        mean_avg_wait_time[i] = N.mean(avg_wait_time)
+
+    plt.figure(2)
+    plt.plot(num_of_doctors, mean_avg_wait_time)
+    plt.xlabel("Number of doctors and exam rooms")
+    plt.ylabel("Average waiting time")
+    plt.title("Average waiting time vs. Number of doctors and exam rooms")
+    plt.show()
+    print()
+
+
+def comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange():
+
+    print("Comparing benefits of increased exam rooms and doctors to benefit + "
+          " of prioritizing patients based on projected examination time")
+    iteration = 30
+    num_of_doctors = N.arange(1, 10) * 5  # Number of doctors
+    exam_rooms = N.arange(1, 10) * 10  # Number of examination rooms
+    # Mean of all average waiting
+    mean_avg_wait_time = N.arange(len(num_of_doctors))
+    # - time in 100 iterations
+
+    for i in range(len(num_of_doctors)):
+        avg_wait_time = N.arange(iteration)
+
+        for j in range(iteration):
+            avg_wait_time[j] = \
+                simulate_waiting(number_of_doctors=num_of_doctors[i],
+                                 number_of_exam_rooms=exam_rooms[i])
+
+        mean_avg_wait_time[i] = N.mean(avg_wait_time)
+
+    avg_wait_time = N.arange(iteration)
+    for i in range(iteration):
+        avg_wait_time[i] = simulate_waiting(number_of_doctors=5, number_of_exam_rooms=10)
+
+    wait_time_with_prioritization = N.mean(avg_wait_time)
+    for wait_time_avg in mean_avg_wait_time:
+        if wait_time_avg > wait_time_with_prioritization:
+            print("better than one increase of 5 doctors and 10 exam rooms")
+
+
+
+# So far metrics:
+# patients with and without attribute thinking
+# patient average waiting time with just doctor increase
+# patient average waiting time with just exam room increase
+# compare FCFS vs. prioritization fast first
+
+# Performance increase per adding doctors AND exam rooms
+#
+#
+# Next metrics:
+# Check number of increased exam rooms and doctors equal to prioritization change (M A Y B E)
+
+
 if __name__ == '__main__':
-    compareQueuingMethod()
-    compareExamRoomsQuantity()
-    compareDoctorsQuantity()
-    comparePatientsWithoutAttributes()
+    # compareQueuingMethod()
+    # compareExamRoomsQuantity()
+    # compareDoctorsQuantity()
+    # comparePatientsWithoutAttributes()
+
+    comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange()
+
 #    simulate_waiting()  #default calling function
