@@ -1,32 +1,37 @@
-# Import statements
+# ======================================================================
+#                        General Documentation
+"""Multiple-classes module.
+
+   See classes docstring for description.
+"""
+
+#=======================================================================
+
+
+# ---------------- Module General Import and Declarations --------------
 import numpy as np
 from enum import Enum
 import random as rand
 
+#------------------------- Class:  PatientStatus -----------------------
 """This class represents the current status of a patient.
 """
-
-
 class PatientStatus(Enum):
     UNQUEUED = 0
     WAITING = 1
     IN_ROOM = 2
     EXITING = 3
 
-
+#------------------------- Class:  PatientSex --------------------------
 """This class represents a patient's gender.
 """
-
-
 class PatientSex(Enum):
     MALE = 0
     FEMALE = 1
 
-
+#------------------------- Class:  PatientAge --------------------------
 """This class represents the age of a patient. Each age range is specified with a number.
 """
-
-
 class PatientAge(Enum):
     AGE_UNDER_15 = 0
     AGE_15_24 = 1
@@ -35,11 +40,9 @@ class PatientAge(Enum):
     AGE_65_74 = 4
     AGE_OVER_74 = 5
 
-
+#------------------------- Class:  PatientRace --------------------------
 """This class represents a patient's race. Each race is specified with a number.
 """
-
-
 class PatientRace(Enum):
     WHITE = 0
     BLACK = 1
@@ -48,11 +51,9 @@ class PatientRace(Enum):
     NATIVE = 4
     OTHER = 5
 
-
+#------------------------- Class:  PatientInsurance --------------------------
 """This class represents the insurance status/information of a patient. Each of them is specified with a number.
 """
-
-
 class PatientInsurance(Enum):
     MEDICARE = 0
     MEDICAID = 1
@@ -60,7 +61,7 @@ class PatientInsurance(Enum):
     OTHER = 3
     UNINSURED = 4
 
-
+#------------------------- Class:  PatientConstant --------------------------
 class PatientConstant:
     """
     Calculating the rate difference from the mean of all visits' time duration
@@ -81,7 +82,9 @@ class PatientConstant:
     BASE_INFECTIOUSNESS = 300  # Minutes for 50% chance at 1.3 R0
     DISEASE_INFECTION_CHANCE_PER_MINUTE = 0.5 / (BASE_INFECTIOUSNESS *
                                                  (1 / INFECTIOUSNESS_MULTIPLIER))
-
+    
+    #Source:
+    #https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
     MEAN_ALL_VISITS = 195.7  # - mean duration of
 
     # - Calculating different rate of visit duration for each attribute
@@ -109,9 +112,9 @@ class PatientConstant:
     RATE_INSURANCE_PRIVATE = 192.8 / MEAN_ALL_VISITS
     RATE_INSURANCE_OTHER = 169.4 / MEAN_ALL_VISITS
     RATE_INSURANCE_UNINSURED = 191.8 / MEAN_ALL_VISITS
-    RATE_INSURANCE = [RATE_INSURANCE_MEDICARE, RATE_INSURANCE_MEDICAID,
-                      RATE_INSURANCE_PRIVATE, RATE_INSURANCE_OTHER,
-                      RATE_INSURANCE_UNINSURED]
+    # RATE_INSURANCE = [RATE_INSURANCE_MEDICARE, RATE_INSURANCE_MEDICAID,
+    #                  RATE_INSURANCE_PRIVATE, RATE_INSURANCE_OTHER,
+    #                  RATE_INSURANCE_UNINSURED]
     RATE_INSURANCE_DICT = {PatientInsurance.MEDICARE: RATE_INSURANCE_MEDICARE,
                            PatientInsurance.MEDICAID: RATE_INSURANCE_MEDICAID,
                            PatientInsurance.PRIVATE: RATE_INSURANCE_PRIVATE,
