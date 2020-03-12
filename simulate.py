@@ -4,6 +4,7 @@ import datetime
 from hospital_constant import HospitalConstant
 from exam_room import ExamRoom
 from priority_queue import PriorityQueue
+from priority_queue import QueueingAlgorithm
 from doctor import Doctor
 from doctor_constant import *
 from patient import Patient
@@ -34,7 +35,8 @@ def simulate_waiting(time_span=timedelta(days=1),
 
     entrance_style = PatientEntranceStyles()
 
-    waiting_queue = PriorityQueue()
+    # waiting_queue = PriorityQueue()
+    waiting_queue = PriorityQueue(alg=QueueingAlgorithm.fast_first)
     start_datetime = datetime.datetime(2020, 1, 1)
     cur_datetime = datetime.datetime(2020, 1, 1)  # SIMULATION CURRENT TIME
     end_datetime = start_datetime + time_span

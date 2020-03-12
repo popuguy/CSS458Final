@@ -2,8 +2,8 @@ from datetime import timedelta
 
 
 class HospitalConstant:
-    EXAM_ROOMS = 5
-    NUM_DOCTORS = 5
+    EXAM_ROOMS = 8
+    NUM_DOCTORS = 10
 
     # Constant to modify for different simulations
     PATIENTS_PER_HOUR = 10
