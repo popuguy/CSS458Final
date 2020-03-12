@@ -17,7 +17,7 @@ class PriorityQueue:
         :param patient: patient to queue.
         """
         patient.queue(add_time)
-        self.queue_algorithm(self.patients, patient)
+        self.patients = self.queue_algorithm(self.patients, patient)
 
     def get(self):
         """Removes the top waiting patient from the queue and returns them.
@@ -65,12 +65,15 @@ class QueueingAlgorithm:
                 # if we have traversed the complete queue
                 if x == (len(patient_list) - 1):
                     # add the patient at the end
-                    patient_list.append(x + 1, patient)
+                    patient_list.insert(x + 1, patient)
+                    return patient_list
                 else:
                     continue
             else:
                 patient_list.insert(x, patient)
                 return patient_list
+        patient_list.append(patient)
+        return patient_list
 
     @staticmethod
     def urgent_first(patient_list, patient):
