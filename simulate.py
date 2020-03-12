@@ -378,7 +378,6 @@ def compareDoctorsPlusExamRoomsQuantity():
 
 
 def comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange():
-
     print("Comparing benefits of increased exam rooms and doctors to benefit + "
           " of prioritizing patients based on projected examination time")
     iteration = 30
@@ -408,18 +407,28 @@ def comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange():
             print("better than one increase of 5 doctors and 10 exam rooms")
 
 
+# Finished metrics:
+# 1 patients with and without attribute thinking
+# 2 patient average waiting time with just doctor increase
+# 3 patient average waiting time with just exam room increase
+# 4 compare FCFS vs. prioritization fast first
 
-# So far metrics:
-# patients with and without attribute thinking
-# patient average waiting time with just doctor increase
-# patient average waiting time with just exam room increase
-# compare FCFS vs. prioritization fast first
-
-# Performance increase per adding doctors AND exam rooms
+# 5 Check number of increased exam rooms and doctors equal to prioritization change
+# 6 Performance increase per adding doctors AND exam rooms
 #
 #
 # Next metrics:
-# Check number of increased exam rooms and doctors equal to prioritization change (M A Y B E)
+# 7 Average waiting time as number of patients per hour increases
+# 8 Average waiting time as portion of doctor time spent with patients increases
+# 9 Waiting time for more doctors vs additional portion of time with patient
+# 10 Percent of patients infected vs waiting time
+# 11 Percent of patients infected with prioritization vs fcfs
+# 12 Risk to patients with different contagiousness level
+# 13 Amount of waiting time by demographic
+
+# 14 Average waiting time with time delta change
+# 15 Average waiting time with simulation length increase
+# 16 Average percent of people infected vs percent of people coming in infectious
 
 
 if __name__ == '__main__':
