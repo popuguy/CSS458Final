@@ -10,6 +10,7 @@ from doctor_constant import *
 from patient import Patient
 from entrance_styles import PatientEntranceStyles
 import numpy as N
+import matplotlib.pyplot as plt
 
 
 def time_delta_to_minutes(time_delta):
@@ -23,16 +24,20 @@ def time_delta_to_minutes(time_delta):
 def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3),
                      verbose=False,
-                     queue_method=None):
+                     queue_method="prioritize_treatment_time",
+                     number_of_exam_rooms = HospitalConstant.EXAM_ROOMS,
+                     number_of_doctors = HospitalConstant.NUM_DOCTORS):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
     :param verbose: If True, print info in simulation.
     :param time_span: Length of full simulation.
     :param time_delta: Time between movements in simulation.
+    :param queue_method: 2 alternative queuing method
     """
-    doctors = [Doctor() for _ in range(HospitalConstant.NUM_DOCTORS)]
-    exam_rooms = [ExamRoom() for _ in range(HospitalConstant.EXAM_ROOMS)]
+    
+    doctors = [Doctor() for _ in range(number_of_doctors)]
+    exam_rooms = [ExamRoom() for _ in range(number_of_exam_rooms)]
 
     entrance_style = PatientEntranceStyles()
 #    print("queue_method = ", queue_method)
@@ -187,7 +192,9 @@ def compareQueuingMethod():
     which prioritize patients with faster treatment time
     
     """
-    iteration = 100
+    print("Comparing patient's average waiting time using 2 queuing methods...")
+    print("(can take up to 10 seconds)")
+    iteration = 50
     
     # Average waiting-time using different queuing methods
     waittime_first_come_first_serve = N.zeros(iteration, dtype='d')
@@ -200,8 +207,11 @@ def compareQueuingMethod():
     avg_waittime_first_come_first_serve = N.mean(waittime_first_come_first_serve)
     avg_waittime_prioritize_treatment_time = N.mean(waittime_prioritize_treatment_time)
     
-    print("avg_waittime_first_come_first_serve = ", avg_waittime_first_come_first_serve)
-    print("avg_waitime_prioritize_treatment_time = ", avg_waittime_prioritize_treatment_time)
+    print("'First come, first served' queuing method: ", \
+          round(avg_waittime_first_come_first_serve,1), " minutes")
+    print("'Process queueing by CPU burst timee' queuing method: ", \
+          round(avg_waittime_prioritize_treatment_time,1), " minutes")
+    print()
     
 #    plt.figure(1)
 #    plt.plot(waittime_first_come_first_serve, time)
@@ -215,13 +225,71 @@ def compareQueuingMethod():
 #    plt.ylabel("Time")
 #    plt.show()
     
+def compareExamRoomsQuantity():
+    """This function compare average waiting time with different number of
+    examination rooms
+    
+    """
+    print("Comparing patient's average waiting time using different \
+          number of examination rooms...")
+    print("(can take up to 10 seconds)")
+    
+    iteration = 10  #- Setting as 10 because iteration of 50 gives the same result
+    exam_rooms = N.arange(1,10) * 10   #- Number of examination rooms
+    mean_avg_wait_time = N.arange(len(exam_rooms)) #- Mean of all average waiting
+                                                    #- time in 100 iterations
+    
+    for i in range(len(exam_rooms)):
+        avg_wait_time = N.arange(iteration)
+        
+        for j in range(iteration):
+            avg_wait_time[j] = simulate_waiting(number_of_exam_rooms = exam_rooms[i])
+        
+        mean_avg_wait_time[i] = N.mean(avg_wait_time)
+        
+    plt.figure(1)
+    plt.plot(exam_rooms, mean_avg_wait_time)
+    plt.xlabel("Number of examination rooms")
+    plt.ylabel("Average waiting time")
+    plt.title("Average waiting time vs. Number of examination rooms")
+    plt.show()
+    print()
+    
+def compareDoctorsQuantity():
+    """This function compare average waiting time with 
+    different number of doctors
+    
+    """
+    print("Comparing patient's average waiting time using different number of doctors...")
+    print("(can take up to 30 seconds)")
+    
+    iteration = 30 
+    num_of_doctors = N.arange(1,10) * 5   #- Number of examination rooms
+    mean_avg_wait_time = N.arange(len(num_of_doctors)) #- Mean of all average waiting
+                                                    #- time in 100 iterations
+    
+    for i in range(len(num_of_doctors)):
+        avg_wait_time = N.arange(iteration)
+        
+        for j in range(iteration):
+            avg_wait_time[j] = simulate_waiting(number_of_doctors = num_of_doctors[i])
+        
+        mean_avg_wait_time[i] = N.mean(avg_wait_time)
+        
+    plt.figure(2)
+    plt.plot(num_of_doctors, mean_avg_wait_time)
+    plt.xlabel("Number of doctors")
+    plt.ylabel("Average waiting time")
+    plt.title("Average waiting time vs. Number of doctors")
+    plt.show()
+    print()
     
     
 
 if __name__ == '__main__':
-#    simulate_waiting(queue_method = "first_come_first_serve")
-#    simulate_waiting(queue_method = "prioritize_treatment_time")
-    compareQueuingMethod()
-    
+
+#    compareQueuingMethod()
+#    compareExamRoomsQuantity()
+    compareDoctorsQuantity()
     
     
