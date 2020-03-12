@@ -12,14 +12,14 @@ class Patient:
     """
     last_id = 0
 
-    def __init__(self):
+    def __init__(self, setAttributes=True):
         """For now, Patient initialization should always be randomized
         according to data-based attributes of hospital patients from
         Karaca et al.
-
         Source:
         https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
         """
+        self.calcAttributes = setAttributes   #- True if patient is set to have attributes
 
         # Coronavirus or some other infectious disease
         self.infected = False
@@ -37,6 +37,7 @@ class Patient:
 
         Patient.last_id += 1
         self.id = Patient.last_id
+        
 
     def _give_statistical_attributes(self):
         """Assign random value to a patient's attributes
@@ -102,7 +103,7 @@ class Patient:
 
         if random.random() < PatientConstant.PORTION_INFECTED:
 
-            print("Infected patient generated!")
+#            print("Infected patient generated!")
             self.infected = True
             self.infectious = True
 
@@ -115,23 +116,33 @@ class Patient:
         Treatment time is defined as the difference between the time 
         the patient had initial contact with a doctor and the time the patient 
         was discharged from the emergency room
-        Please refer to source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
         
-        Patient's treatment time also differs according to their age, gender,
-        race, and type of insurance attributes
+        Source: https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
+        
+        Patient's treatment time is generated using the source above and 
+        differs according to their age, gender,race, and type of insurance attributes
+        
         """
         # I make an assumption here that when the patient is served or enter the exam room, this means they have
         # contact with doctor.
         # self.treatment_time = self.time_exited - self.time_served
-        self.treatment_time = PatientConstant.MEAN_ALL_VISITS
+        self.treatment_time = random.uniform(PatientConstant.LOW_MEAN_ALL_VISITS, \
+                                             PatientConstant.HIGH_MEAN_ALL_VISITS)
 
-        # Calculate the treatment according to patient's attribute
-        if self.sex is PatientSex.MALE:
-            self.treatment_time *= PatientConstant.RATE_GENDER_MALE
-        else:
-            self.treatment_time *= PatientConstant.RATE_GENDER_FEMALE
-        self.treatment_time *= PatientConstant.RATE_RACE_DICT[self.race]
-        self.treatment_time *= PatientConstant.RATE_INSURANCE_DICT[self.insurance]
+#        print("before: ", self.treatment_time)
+        if (self.calcAttributes == True):
+    
+            # Calculate the treatment according to patient's attribute
+            if self.sex is PatientSex.MALE:
+                self.treatment_time *= PatientConstant.RATE_GENDER_MALE
+            else:
+                self.treatment_time *= PatientConstant.RATE_GENDER_FEMALE
+            self.treatment_time *= PatientConstant.RATE_RACE_DICT[self.race]
+            self.treatment_time *= PatientConstant.RATE_INSURANCE_DICT[self.insurance]
+            
+        
+#        print("after: ", self.treatment_time)
+#        print()
 
         return self.treatment_time
 
@@ -182,7 +193,7 @@ class Patient:
         self.time_exited = cur_time
         self.status = PatientStatus.EXITING
 
-        print("Patient exiting. Examination took", self.time_exited - self.time_served)
+#        print("Patient exiting. Examination took", self.time_exited - self.time_served)
 
     def has_completed_visit(self, cur_time):
         """Get the total time during a patient's visit by adding waiting time
