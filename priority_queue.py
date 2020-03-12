@@ -17,7 +17,8 @@ class PriorityQueue:
         :param patient: patient to queue.
         """
         patient.queue(add_time)
-        self.patients = self.queue_algorithm(self.patients, patient)
+#        self.patients = self.queue_algorithm(self.patients, patient)
+        self.queue_algorithm(self.patients, patient)
 
     def get(self):
         """Removes the top waiting patient from the queue and returns them.
@@ -41,8 +42,6 @@ class PriorityQueue:
         return self.patients
 
     # from priority_queue import PriorityQueue as q
-
-    # This is what I did so far. Please check the code if it's correct and modified it to fit our model. Thank you.
 
 
 class QueueingAlgorithm:
