@@ -20,6 +20,7 @@ class Doctor:
     """
     next_id = 0
 
+    # Constructor
     def __init__(self):
         self.state = DoctorState.READY
         self.time_entered_exam_room = None
