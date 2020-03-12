@@ -25,9 +25,9 @@ def simulate_waiting(time_span=timedelta(days=1),
                      time_delta=timedelta(minutes=3),
                      verbose=False,
                      queue_method="prioritize_treatment_time",
-                     number_of_exam_rooms = HospitalConstant.EXAM_ROOMS,
-                     number_of_doctors = HospitalConstant.NUM_DOCTORS,
-                     setAttributes = True):
+                     number_of_exam_rooms=HospitalConstant.EXAM_ROOMS,
+                     number_of_doctors=HospitalConstant.NUM_DOCTORS,
+                     setAttributes=True):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
@@ -36,17 +36,17 @@ def simulate_waiting(time_span=timedelta(days=1),
     :param time_delta: Time between movements in simulation.
     :param queue_method: 2 alternative queuing method
     """
-    
+
     doctors = [Doctor() for _ in range(number_of_doctors)]
     exam_rooms = [ExamRoom() for _ in range(number_of_exam_rooms)]
 
     entrance_style = PatientEntranceStyles()
-#    print("queue_method = ", queue_method)
+    #    print("queue_method = ", queue_method)
     if (queue_method == "first_come_first_serve"):
         waiting_queue = PriorityQueue()
     elif (queue_method == "prioritize_treatment_time"):
         waiting_queue = PriorityQueue(alg=QueueingAlgorithm.fast_first)
-    
+
     start_datetime = datetime.datetime(2020, 1, 1)
     cur_datetime = datetime.datetime(2020, 1, 1)  # SIMULATION CURRENT TIME
     end_datetime = start_datetime + time_span
@@ -134,9 +134,11 @@ def simulate_waiting(time_span=timedelta(days=1),
             if patient.infected:
                 num_infected_waiting += 1
         for patient in patients_waiting:
-            if not patient.infected and patient.try_contract_infection(time_delta, num_infected_waiting):
+            if not patient.infected and \
+                    patient.try_contract_infection(
+                        time_delta, num_infected_waiting):
                 total_num_patients_infected += 1
-                if verbose: 
+                if verbose:
                     print("Patient infected!!")
 
         # For different configurations of the simulation, patients will be
@@ -158,7 +160,8 @@ def simulate_waiting(time_span=timedelta(days=1),
         #
         # patients_to_generate -= int(patients_to_generate)
         #
-        # print("it would gen", entrance_style.rise_and_fall_linear(num_loops, time_delta), "patients here")
+        # print("it would gen", entrance_style.rise_and_fall_linear(num_loops,
+        # time_delta), "patients here")
         #
         # # --- QUEUE PATIENTS ---
         # for patient in unqueued_patients:
@@ -179,41 +182,48 @@ def simulate_waiting(time_span=timedelta(days=1),
         wait_time_patient_mins = time_delta_to_minutes(wait_time_patient_delta)
         total_wait_time += wait_time_patient_mins
     avg_wait_time = total_wait_time / total_served_patients
-#    print("total_served_patients = ", total_served_patients)
-#    print("Average wait time for simulation:", avg_wait_time, "minutes.")
+    #    print("total_served_patients = ", total_served_patients)
+    #    print("Average wait time for simulation:", avg_wait_time, "minutes.")
 
     # Number of patients infected
-#    print(total_num_patients_infected, "total_num_patients_infected")
-    
-    return avg_wait_time#, total_served_patients
-    
+    #    print(total_num_patients_infected, "total_num_patients_infected")
+
+    return avg_wait_time  # , total_served_patients
+
+
 def compareQueuingMethod():
     """This function compare average waiting time of 2 queuing methods
     "first come, first served" and "process queueing by CPU burst time," 
     which prioritize patients with faster treatment time
     
     """
-    print("Comparing patient's average waiting time using 2 queuing methods...")
+    print("Comparing patient's average waiting time" +
+          " using 2 queuing methods...")
     print("(can take up to 10 seconds)")
     iteration = 50
-    
+
     # Average waiting-time using different queuing methods
     waittime_first_come_first_serve = N.zeros(iteration, dtype='d')
     waittime_prioritize_treatment_time = N.zeros(iteration, dtype='d')
 
     for i in range(iteration):
-        waittime_first_come_first_serve[i] = simulate_waiting(queue_method = "first_come_first_serve")
-        waittime_prioritize_treatment_time[i] = simulate_waiting(queue_method = "prioritize_treatment_time")
+        waittime_first_come_first_serve[i] = \
+            simulate_waiting(queue_method="first_come_first_serve")
+        waittime_prioritize_treatment_time[i] = \
+            simulate_waiting(queue_method="prioritize_treatment_time")
 
-    mean_waittime_first_come_first_serve = N.mean(waittime_first_come_first_serve)
-    mean_waittime_prioritize_treatment_time = N.mean(waittime_prioritize_treatment_time)
-    
-    print("'First come, first served' queuing method: ", \
-          round(mean_waittime_first_come_first_serve,1), " minutes")
+    mean_waittime_first_come_first_serve = \
+        N.mean(waittime_first_come_first_serve)
+    mean_waittime_prioritize_treatment_time = \
+        N.mean(waittime_prioritize_treatment_time)
+
+    print("'First come, first served' queuing method: ",
+          round(mean_waittime_first_come_first_serve, 1), " minutes")
     print("'Process queueing by CPU burst time' queuing method: ", \
-          round(mean_waittime_prioritize_treatment_time,1), " minutes")
+          round(mean_waittime_prioritize_treatment_time, 1), " minutes")
     print()
-    
+
+
 #    plt.figure(1)
 #    plt.plot(waittime_first_come_first_serve, time)
 #    plt.xlabel("waittime_first_come_first_serve")
@@ -225,7 +235,7 @@ def compareQueuingMethod():
 #    plt.xlabel("waittime_prioritize_treatment_time")
 #    plt.ylabel("Time")
 #    plt.show()
-    
+
 def compareExamRoomsQuantity():
     """This function compare average waiting time with different number of
     examination rooms
@@ -234,20 +244,22 @@ def compareExamRoomsQuantity():
     print("Comparing patient's average waiting time using different \
           number of examination rooms...")
     print("(can take up to 10 seconds)")
-    
-    iteration = 10  #- Setting as 10 because iteration of 50 gives the same result
-    exam_rooms = N.arange(1,10) * 10   #- Number of examination rooms
-    mean_avg_wait_time = N.arange(len(exam_rooms)) #- Mean of all average waiting
-                                                    #- time in 100 iterations
-    
+
+    # Setting as 10 because iteration of 50 gives the same result
+    iteration = 10
+    exam_rooms = N.arange(1, 10) * 10  # Number of examination rooms
+    # Mean of all average waiting time in 100 iterations
+    mean_avg_wait_time = N.arange(len(exam_rooms))
+
     for i in range(len(exam_rooms)):
         avg_wait_time = N.arange(iteration)
-        
+
         for j in range(iteration):
-            avg_wait_time[j] = simulate_waiting(number_of_exam_rooms = exam_rooms[i])
-        
+            avg_wait_time[j] = \
+                simulate_waiting(number_of_exam_rooms=exam_rooms[i])
+
         mean_avg_wait_time[i] = N.mean(avg_wait_time)
-        
+
     plt.figure(1)
     plt.plot(exam_rooms, mean_avg_wait_time)
     plt.xlabel("Number of examination rooms")
@@ -255,28 +267,32 @@ def compareExamRoomsQuantity():
     plt.title("Average waiting time vs. Number of examination rooms")
     plt.show()
     print()
-    
+
+
 def compareDoctorsQuantity():
     """This function compare average waiting time with 
     different number of doctors
     
     """
-    print("Comparing patient's average waiting time using different number of doctors...")
+    print("Comparing patient's average waiting time using different" +
+          " number of doctors...")
     print("(can take up to 30 seconds)")
-    
-    iteration = 30 
-    num_of_doctors = N.arange(1,10) * 5   #- Number of examination rooms
-    mean_avg_wait_time = N.arange(len(num_of_doctors)) #- Mean of all average waiting
-                                                    #- time in 100 iterations
-    
+
+    iteration = 30
+    num_of_doctors = N.arange(1, 10) * 5  # Number of examination rooms
+    # Mean of all average waiting
+    mean_avg_wait_time = N.arange(len(num_of_doctors))
+    # - time in 100 iterations
+
     for i in range(len(num_of_doctors)):
         avg_wait_time = N.arange(iteration)
-        
+
         for j in range(iteration):
-            avg_wait_time[j] = simulate_waiting(number_of_doctors = num_of_doctors[i])
-        
+            avg_wait_time[j] = \
+                simulate_waiting(number_of_doctors=num_of_doctors[i])
+
         mean_avg_wait_time[i] = N.mean(avg_wait_time)
-        
+
     plt.figure(2)
     plt.plot(num_of_doctors, mean_avg_wait_time)
     plt.xlabel("Number of doctors")
@@ -284,7 +300,8 @@ def compareDoctorsQuantity():
     plt.title("Average waiting time vs. Number of doctors")
     plt.show()
     print()
-    
+
+
 def comparePatientsWithoutAttributes():
     """This function compare average waiting time with of patients with and
     without taking into account of their attributes
@@ -295,26 +312,27 @@ def comparePatientsWithoutAttributes():
     print("(can take up to 10 seconds)")
     iteration = 100
     iteration_step = N.arange(iteration) + 1
-    
+
     wait_time_with_attributes = N.zeros(iteration, dtype='d')
     wait_time_without_attributes = N.zeros(iteration, dtype='d')
-    
+
     for i in range(iteration):
-        wait_time_with_attributes[i] = simulate_waiting(setAttributes = True)
-        wait_time_without_attributes[i] = simulate_waiting(setAttributes = False)
+        wait_time_with_attributes[i] = simulate_waiting(setAttributes=True)
+        wait_time_without_attributes[i] = simulate_waiting(setAttributes=False)
 
     mean_wait_time_with_attributes = N.mean(wait_time_with_attributes)
     mean_wait_time_without_attributes = N.mean(wait_time_without_attributes)
-    
-    print("Taking into account of attributes: ", \
-          round(mean_wait_time_with_attributes,1), " minutes")
-    print("Without taking into account of attributes: ", \
-          round(mean_wait_time_without_attributes,1), " minutes")
+
+    print("Taking into account of attributes: ",
+          round(mean_wait_time_with_attributes, 1), " minutes")
+    print("Without taking into account of attributes: ",
+          round(mean_wait_time_without_attributes, 1), " minutes")
     print()
 
     plt.figure(3)
-    plt.plot(iteration_step, wait_time_with_attributes, color='skyblue', label="With attributes")
-    plt.plot(iteration_step, wait_time_without_attributes, color='olive', \
+    plt.plot(iteration_step, wait_time_with_attributes,
+             color='skyblue', label="With attributes")
+    plt.plot(iteration_step, wait_time_without_attributes, color='olive',
              linestyle='dashed', label="Without attributes")
     plt.xlabel("Iteration")
     plt.ylabel("Average waiting time")
@@ -323,12 +341,10 @@ def comparePatientsWithoutAttributes():
     plt.show()
     print()
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     compareQueuingMethod()
     compareExamRoomsQuantity()
     compareDoctorsQuantity()
     comparePatientsWithoutAttributes()
 #    simulate_waiting()  #default calling function
-    
-    

@@ -1,20 +1,18 @@
-#=======================================================================
+# =======================================================================
 #                        General Documentation
 
 """Multiple-classes module.
 
    See class docstring for description.
 """
-#=======================================================================
+# =======================================================================
 
 
-
-
-#---------------- Module General Import and Declarations ---------------
+# ---------------- Module General Import and Declarations ---------------
 from enum import Enum
 
 
-#------------------------- Class: DoctorState -------------------------
+# ------------------------- Class: DoctorState -------------------------
 class DoctorState(Enum):
     """Possibly invalid source for current data:
     https://www.ncbi.nlm.nih.gov/pubmed/23340186
@@ -34,12 +32,15 @@ class DoctorState(Enum):
     PERSONAL_TIME = 6
     OTHER = 7
 
-#------------------------- Class: DoctorConstant -------------------------
+
+# ------------------------- Class: DoctorConstant -------------------------
 class DoctorConstant:
+    """Constants pertaining to the setup of a Doctor
+
+    """
     # Source:
     # https://www.statista.com/statistics/250219/us-physicians-opinion-about-their-compensation/
     AVG_TIME_SPENT_WITH_PATIENT = 20  # Minutes
     PORTION_TIME_SPENT_WITH_PATIENT = 0.25
-    
-    
+
 # ===== end file =====

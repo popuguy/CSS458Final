@@ -5,7 +5,7 @@
    See classes docstring for description.
 """
 
-#=======================================================================
+# =======================================================================
 
 
 # ---------------- Module General Import and Declarations --------------
@@ -14,26 +14,35 @@ from enum import Enum
 import random as rand
 from simulation_configuration import SimulationConfiguration
 
-#------------------------- Class:  PatientStatus -----------------------
+# ------------------------- Class:  PatientStatus -----------------------
 
 """This class represents the current status of a patient.
 """
+
+
 class PatientStatus(Enum):
     UNQUEUED = 0
     WAITING = 1
     IN_ROOM = 2
     EXITING = 3
 
-#------------------------- Class:  PatientSex --------------------------
+
+# ------------------------- Class:  PatientSex --------------------------
 """This class represents a patient's gender.
 """
+
+
 class PatientSex(Enum):
     MALE = 0
     FEMALE = 1
 
-#------------------------- Class:  PatientAge --------------------------
-"""This class represents the age of a patient. Each age range is specified with a number.
+
+# ------------------------- Class:  PatientAge --------------------------
+"""This class represents the age of a patient. Each age range is specified 
+with a number.
 """
+
+
 class PatientAge(Enum):
     AGE_UNDER_15 = 0
     AGE_15_24 = 1
@@ -42,9 +51,13 @@ class PatientAge(Enum):
     AGE_65_74 = 4
     AGE_OVER_74 = 5
 
-#------------------------- Class:  PatientRace --------------------------
-"""This class represents a patient's race. Each race is specified with a number.
+
+# ------------------------- Class:  PatientRace --------------------------
+"""This class represents a patient's race. Each race is specified with a 
+number.
 """
+
+
 class PatientRace(Enum):
     WHITE = 0
     BLACK = 1
@@ -53,9 +66,13 @@ class PatientRace(Enum):
     NATIVE = 4
     OTHER = 5
 
-#------------------------- Class:  PatientInsurance --------------------------
-"""This class represents the insurance status/information of a patient. Each of them is specified with a number.
+
+# ------------------------- Class:  PatientInsurance --------------------------
+"""This class represents the insurance status/information of a patient. Each 
+of them is specified with a number.
 """
+
+
 class PatientInsurance(Enum):
     MEDICARE = 0
     MEDICAID = 1
@@ -63,7 +80,8 @@ class PatientInsurance(Enum):
     OTHER = 3
     UNINSURED = 4
 
-#------------------------- Class:  PatientConstant --------------------------
+
+# ------------------------- Class:  PatientConstant --------------------------
 class PatientConstant:
     """
     Calculating the rate difference from the mean of all visits' time duration
@@ -75,19 +93,21 @@ class PatientConstant:
     # https://www.fredhutch.org/en/news/center-news/2015/12/separating-fact-from-fiction-about-colds-and-flu.html
     #
     # Mostly just guessed numbers about transmission probability
-    # From a story, 10 hours in close proximity to a person sick with a cold was enough to infect
-    # Assume that is a base and the disease in question has some multiplier of infectiousness related to that base
+    # From a story, 10 hours in close proximity to a person sick with a cold
+    # was enough to infect
+    # Assume that is a base and the disease in question has some multiplier of
+    # infectiousness related to that base
     #
     # Another source:
     # https://arstechnica.com/science/2020/03/dont-panic-the-comprehensive-ars-technica-guide-to-the-coronavirus/2/#h3
     # 2-2.5 R0 number for COVID-19 as opposed to 1.3 for seasonal flu
     INFECTIOUSNESS_MULTIPLIER = 2.25 / 1.3
     BASE_INFECTIOUSNESS = 300  # Minutes for 50% chance at 1.3 R0
-    DISEASE_INFECTION_CHANCE_PER_MINUTE = 0.5 / (BASE_INFECTIOUSNESS *
-                                                 (1 / INFECTIOUSNESS_MULTIPLIER))
-    
-    #Source:
-    #https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
+    DISEASE_INFECTION_CHANCE_PER_MINUTE = \
+        0.5 / (BASE_INFECTIOUSNESS * (1 / INFECTIOUSNESS_MULTIPLIER))
+
+    # Source:
+    # https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
     MEAN_ALL_VISITS = 195.7  # - mean duration of all visits' treatment time
     LOW_MEAN_ALL_VISITS = 194.2
     HIGH_MEAN_ALL_VISITS = 197.2
@@ -107,9 +127,12 @@ class PatientConstant:
     RATE_RACE_OTHER = 193.8 / MEAN_ALL_VISITS
     # RATE_RACE = [RATE_RACE_WHITE, RATE_RACE_BLACK, RATE_RACE_HISPANIC, \
     #              RATE_RACE_ASIAN, RATE_RACE_NATIVE, RATE_RACE_OTHER]
-    RATE_RACE_DICT = {PatientRace.WHITE: RATE_RACE_WHITE, PatientRace.BLACK: RATE_RACE_BLACK,
-                      PatientRace.HISPANIC: RATE_RACE_HISPANIC, PatientRace.ASIAN: RATE_RACE_ASIAN,
-                      PatientRace.NATIVE: RATE_RACE_NATIVE, PatientRace.OTHER: RATE_RACE_OTHER}
+    RATE_RACE_DICT = {PatientRace.WHITE: RATE_RACE_WHITE,
+                      PatientRace.BLACK: RATE_RACE_BLACK,
+                      PatientRace.HISPANIC: RATE_RACE_HISPANIC,
+                      PatientRace.ASIAN: RATE_RACE_ASIAN,
+                      PatientRace.NATIVE: RATE_RACE_NATIVE,
+                      PatientRace.OTHER: RATE_RACE_OTHER}
 
     # - Patient's insurance coverage attribute
     RATE_INSURANCE_MEDICARE = 237.7 / MEAN_ALL_VISITS
@@ -124,7 +147,8 @@ class PatientConstant:
                            PatientInsurance.MEDICAID: RATE_INSURANCE_MEDICAID,
                            PatientInsurance.PRIVATE: RATE_INSURANCE_PRIVATE,
                            PatientInsurance.OTHER: RATE_INSURANCE_OTHER,
-                           PatientInsurance.UNINSURED: RATE_INSURANCE_UNINSURED}
+                           PatientInsurance.UNINSURED:
+                               RATE_INSURANCE_UNINSURED}
 
     # ------------------ Portion of patients with attributes -----------------
 
@@ -161,7 +185,6 @@ class PatientConstant:
                                     SOURCE_DATA_TOTAL_AGE
     SOURCE_DATA_PORTION_AGE_OVER_74 = SOURCE_DATA_AGE_OVER_74 / \
                                       SOURCE_DATA_TOTAL_AGE
-
 
     # Race attributes (# of people out of total)
 
@@ -261,4 +284,3 @@ class PatientConstant:
 
         RATE_GENDER_MALE = 0.995 / 1.995
         RATE_GENDER_FEMALE = 1 / 1.995
-

@@ -19,8 +19,10 @@ class Patient:
 
         Source:
         https://bmcemergmed.biomedcentral.com/track/pdf/10.1186/1471-227X-12-15
+        :param setAttributes: If True, attributes will be used for calculating
+        projected time in exam room
         """
-        self.calcAttributes = setAttributes   #- True if patient is set to have attributes
+        self.calcAttributes = setAttributes  # True if patient is set to have attributes
 
         # Coronavirus or some other infectious disease
         self.infected = False
@@ -41,7 +43,8 @@ class Patient:
 
 
     def _give_statistical_attributes(self):
-        """Assign random value to a patient's attributes
+        """Assigns patient attributes based on demographic selected in
+        configuration.
         """
         # Possible information on a statistical way to use the multiple means
         # for different attributes:
@@ -108,30 +111,43 @@ class Patient:
             self.infectious = True
 
     def _generate_actual_treatment_time(self):
+        """With a small degree of randomness, this method generates a real
+        min amount of time they will need to spend in an exam room. Actual time
+        spent in the exam room is based on whether the patient is seen by a
+        doctor in a timely fashion.
+
+        :return: Generated actual treatment time
+        """
         # From the source, this is close-ish to +-1% for each attribute
 
         plus_or_minus_mean = random.uniform(
             1 - PatientConstant.PLUS_OR_MINUS_PORTION,
             1 + PatientConstant.PLUS_OR_MINUS_PORTION)
 
-        self.generated_hospital_time = PatientConstant.MEAN_ALL_VISITS * plus_or_minus_mean
+        self.generated_hospital_time = PatientConstant.MEAN_ALL_VISITS * \
+                                       plus_or_minus_mean
 
         plus_or_minus_sex = random.uniform(
             1 - PatientConstant.PLUS_OR_MINUS_PORTION,
             1 + PatientConstant.PLUS_OR_MINUS_PORTION)
         # Calculate the treatment according to patient's attribute
         if self.sex is PatientSex.MALE:
-            self.generated_hospital_time *= PatientConstant.RATE_GENDER_MALE * plus_or_minus_sex
+            self.generated_hospital_time *= \
+                PatientConstant.RATE_GENDER_MALE * plus_or_minus_sex
         else:
-            self.generated_hospital_time *= PatientConstant.RATE_GENDER_FEMALE * plus_or_minus_sex
+            self.generated_hospital_time *= \
+                PatientConstant.RATE_GENDER_FEMALE * plus_or_minus_sex
         plus_or_minus_race = random.uniform(
             1 - PatientConstant.PLUS_OR_MINUS_PORTION,
             1 + PatientConstant.PLUS_OR_MINUS_PORTION)
-        self.generated_hospital_time *= PatientConstant.RATE_RACE_DICT[self.race] * plus_or_minus_race
+        self.generated_hospital_time *= \
+            PatientConstant.RATE_RACE_DICT[self.race] * plus_or_minus_race
         plus_or_minus_insurance = random.uniform(
             1 - PatientConstant.PLUS_OR_MINUS_PORTION,
             1 + PatientConstant.PLUS_OR_MINUS_PORTION)
-        self.generated_hospital_time *= PatientConstant.RATE_INSURANCE_DICT[self.insurance] * plus_or_minus_insurance
+        self.generated_hospital_time *= \
+            PatientConstant.RATE_INSURANCE_DICT[self.insurance] * \
+            plus_or_minus_insurance
 
         return self.generated_hospital_time
 
@@ -143,17 +159,18 @@ class Patient:
         Please refer to source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
         
         Patient's treatment time is generated using the source at the top and
-        differs according to their age, gender,race, and type of insurance attributes
+        differs according to their age, gender,race, and type of insurance
+        attributes.
 
         """
-        # I make an assumption here that when the patient is served or enter the exam room, this means they have
-        # contact with doctor.
+        # I make an assumption here that when the patient is served or enter
+        # the exam room, this means they have contact with doctor.
         # self.treatment_time = self.time_exited - self.time_served
         self.treatment_time = random.uniform(PatientConstant.LOW_MEAN_ALL_VISITS, \
                                              PatientConstant.HIGH_MEAN_ALL_VISITS)
 
 #        print("before: ", self.treatment_time)
-        if (self.calcAttributes == True):
+        if self.calcAttributes == True:
 
             # Calculate the treatment according to patient's attribute
             if self.sex is PatientSex.MALE:
@@ -161,7 +178,8 @@ class Patient:
             else:
                 self.treatment_time *= PatientConstant.RATE_GENDER_FEMALE
             self.treatment_time *= PatientConstant.RATE_RACE_DICT[self.race]
-            self.treatment_time *= PatientConstant.RATE_INSURANCE_DICT[self.insurance]
+            self.treatment_time *= \
+                PatientConstant.RATE_INSURANCE_DICT[self.insurance]
 
 
 #        print("after: ", self.treatment_time)
@@ -169,20 +187,30 @@ class Patient:
 
         return self.treatment_time
 
-    """This is a method to calculate the wait time of a patient. Wait time is defined as the difference 
-        between the time of arrival in the ED and the time the patient had initial contact with a physician, physician 
-        assistant, or nurse practitioner.
-        Please refer to the source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
-    """
-
     def _calc_wait_time(self):
+        """This is a method to calculate the wait time of a patient. Wait time
+        is defined as the difference between the time of arrival in the ED and
+        the time the patient had initial contact with a physician, physician
+        assistant, or nurse practitioner.
+
+        Please refer to the source: https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6319a8.htm
+        """
         # TODO: Fix to give a realistic wait time
-        # I make an assumption here that the time when a patient is in the queue is the time when they arrive at ER.
+        # I make an assumption here that the time when a patient is in the
+        # queue is the time when they arrive at ER.
         self.wait_time = self.time_served - self.time_queued
         return self.wait_time
         # return PatientConstant.MEAN_ALL_VISITS
 
     def try_contract_infection(self, time_delta, num_infected_near):
+        """To be called only once per time_delta, method uses probability of
+        infection to determine if patient has become infected by nearby
+        infected patients during the last time_delta
+
+        :param time_delta: Amount of time passed near num_infected_near
+        :param num_infected_near: Number of infectious patients nearby
+        :return: True if patient contracts the infection
+        """
         chance_to_contract = \
             PatientConstant.DISEASE_INFECTION_CHANCE_PER_MINUTE * \
             self._time_delta_to_minutes(time_delta) * num_infected_near
@@ -192,7 +220,7 @@ class Patient:
         return False
 
     def _time_delta_to_minutes(self, time_delta):
-        """Accurate to one second time delta in minutes returned.
+        """Accurate to one second, time delta in minutes returned.
         :param time_delta A datetime.timedelta object
         :returns A float of minutes in the time delta
         """
@@ -200,28 +228,36 @@ class Patient:
 
     def queue(self, queue_time):
         """Enqueue a patient
+        :param queue_time: When the queueing occurs
         """
         self.status = PatientStatus.WAITING
         self.time_queued = queue_time
 
     def serve(self, service_time):
         """Serve a patient by moving them into the exam room
+        :param service_time: When the patient is moved to exam room
         """
         self.status = PatientStatus.IN_ROOM
         self.time_served = service_time
 
     def exit(self, cur_time):
         """Remove a patient from the exam room and get their departure time
+        :param cur_time: Time at which patient departs
         """
         self.time_exited = cur_time
         self.status = PatientStatus.EXITING
 
-        # print("Patient exiting. Examination took", self.time_exited - self.time_served)
-#        print("Patient exiting. Examination took", self.time_exited - self.time_served)
+        # print("Patient exiting. Examination took", self.time_exited -
+        # self.time_served)
+#        print("Patient exiting. Examination took", self.time_exited -
+    #        self.time_served)
 
     def has_completed_visit(self, cur_time):
         """Get the total time during a patient's visit by adding waiting time
         and consultation time
+        :param cur_time: Time to check for completion.
+        :return: True if patient has been seen and has been in the exam room
+        for the generated period of time.
         """
         return (cur_time >= self.time_served +
                 timedelta(minutes=self.generated_hospital_time)) and \

@@ -12,9 +12,14 @@ def time_delta_to_minutes(time_delta):
     """
     return (time_delta.days * 24 * 60) + (time_delta.seconds / 60)
 
+
 class Doctor:
+    """Doctor class defines a single doctor that changes states to
+    'move' around the hospital/medical environment
+
+    """
     next_id = 0
-    
+
     def __init__(self):
         self.state = DoctorState.READY
         self.time_entered_exam_room = None
@@ -22,10 +27,17 @@ class Doctor:
         Doctor.next_id += 1
 
     def enter_exam_room(self, entry_time):
+        """Appropriately modifies doctor for entry to exam room
+
+        :param entry_time: When entry takes place
+        """
         self.state = DoctorState.IN_PATIENT_EXAM_ROOM
         self.time_entered_exam_room = entry_time
 
     def exit_exam_room(self):
+        """Appropriately modifies doctor for exit of exam room
+
+        """
         self.state = DoctorState.OTHER
         self.time_entered_exam_room = None
 
@@ -38,15 +50,21 @@ class Doctor:
         """
         if self.state == DoctorState.IN_PATIENT_EXAM_ROOM:
             return
-        # We have the amount of time a doctor stays in patient room as DoctorConstant.PORTION_TIME_SPENT_WITH_PATIENT
-        # We have the length of time a doctor stays in patient room as DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT
-        # Thus, for average time spent doing OTHER we use PORTION * all time = TIME_SPENT_WITH_PATIENT
-        total_time_unit = DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT / DoctorConstant.PORTION_TIME_SPENT_WITH_PATIENT
-        time_spent_doing_other = total_time_unit - DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT
-        chance_change_task = time_delta_to_minutes(time_delta) / time_spent_doing_other
-        if self.state == DoctorState.OTHER and random.random() < chance_change_task:
+        # We have the amount of time a doctor stays in patient room as
+        # DoctorConstant.PORTION_TIME_SPENT_WITH_PATIENT
+        # We have the length of time a doctor stays in patient room as
+        # DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT
+        # Thus, for average time spent doing OTHER we use PORTION * all time
+        # = TIME_SPENT_WITH_PATIENT
+        total_time_unit = DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT / \
+                          DoctorConstant.PORTION_TIME_SPENT_WITH_PATIENT
+        time_spent_doing_other = total_time_unit - \
+                                 DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT
+        chance_change_task = time_delta_to_minutes(time_delta) / \
+                             time_spent_doing_other
+        if self.state == DoctorState.OTHER and random.random() < \
+                chance_change_task:
             self.state = DoctorState.READY
-
 
     def has_completed_patient_visit(self, cur_time):
         """Check if exam room visit complete.

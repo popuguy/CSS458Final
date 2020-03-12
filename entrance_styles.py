@@ -15,7 +15,7 @@ class PatientEntranceStyles:
 
     def basic(self, time_delta,
               patients_per_hour=HospitalConstant.PATIENTS_PER_HOUR):
-        """
+        """Basic entrance style for just even number of patients per hour.
 
         :param time_delta: The length of each loop as a datetime.timedelta
         :param patients_per_hour: Optionally user-defined patients to generate
@@ -40,7 +40,8 @@ class PatientEntranceStyles:
                              HospitalConstant.DEFAULT_PEAK_PATIENTS,
                              min_num_patients_per_hour=
                              HospitalConstant.DEFAULT_MIN_PATIENTS):
-        """Linear rise and fall patient entrance style
+        """Linear rise and fall patient entrance style. After first peak,
+        new peaks occur every time_from_start_peak * 2
 
         :param num_loops: Number of loops executed in simulation so far
         :param time_delta: Time delta for each loop as datetime.timedelta
@@ -50,16 +51,20 @@ class PatientEntranceStyles:
         :param min_num_patients_per_hour: Fewest patients per hour
         """
         time_delta_mins = self._time_delta_to_minutes(time_delta)
-        time_from_start_peak_mins = self._time_delta_to_minutes(time_from_start_peak)
+        time_from_start_peak_mins = \
+            self._time_delta_to_minutes(time_from_start_peak)
         num_loops_at_peak = time_from_start_peak_mins / time_delta_mins
-        general_pph_slope = (peak_num_patients_per_hour - min_num_patients_per_hour) / num_loops_at_peak
+        general_pph_slope = (peak_num_patients_per_hour -
+                             min_num_patients_per_hour) / num_loops_at_peak
         if num_loops < num_loops_at_peak:
-            cur_num_patients_per_hour = min_num_patients_per_hour + (general_pph_slope * num_loops)
+            cur_num_patients_per_hour = min_num_patients_per_hour + \
+                                        (general_pph_slope * num_loops)
             cur_num_patients_per_min = cur_num_patients_per_hour / 60
 
             mins_elapsed = time_delta.total_seconds() / 60
 
-            self.patients_to_generate += mins_elapsed * cur_num_patients_per_min
+            self.patients_to_generate += mins_elapsed * \
+                                         cur_num_patients_per_min
             num_new_generate = int(self.patients_to_generate)
 
             self.patients_to_generate -= int(self.patients_to_generate)
