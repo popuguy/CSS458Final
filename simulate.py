@@ -407,6 +407,40 @@ def comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange():
             print("better than one increase of 5 doctors and 10 exam rooms")
 
 
+# def compareAvgWaitingTimeAsPatientPerHourIncreases():
+#     patients_per_hour = (N.arange(0, 22) * 0.5) + 1.5
+
+
+def compareWaitingTimeAndDeviationByTimeDelta():
+    iterations = 100  # Iterations per run
+    delta_increment = 5  # Minutes
+    num_deltas_to_try = 10  # Total number of sets of averages
+    delta_minutes = (N.arange(0, num_deltas_to_try) * delta_increment) + 1
+    average_wait_time_averages = N.zeros(num_deltas_to_try)
+    average_wait_times = []
+
+    i = 0
+    for mins in delta_minutes:
+        wait_time_set = []
+        for iter in range(iterations):
+            iteration_wait_time = simulate_waiting(time_delta=timedelta(minutes=float(mins)))
+            wait_time_set.append(iteration_wait_time)
+        average_wait_times.append(wait_time_set)
+        average_wait_time_averages[i] = N.mean(wait_time_set)
+
+        iter += 1
+
+    std_devs = [N.std(times) for times in average_wait_times]
+
+    plt.figure(2)
+    plt.plot(delta_minutes, std_devs)
+    plt.xlabel("Minutes in time delta for loop iterations")
+    plt.ylabel("Waiting time standard deviation")
+    plt.title("Standard deviation of wait time as a function of minutes in loop iteration time delta")
+    plt.show()
+
+
+
 # Finished metrics:
 # 1 patients with and without attribute thinking
 # 2 patient average waiting time with just doctor increase
@@ -437,6 +471,8 @@ if __name__ == '__main__':
     # compareDoctorsQuantity()
     # comparePatientsWithoutAttributes()
 
-    comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange()
+    # comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange()
+
+    compareWaitingTimeAndDeviationByTimeDelta()
 
 #    simulate_waiting()  #default calling function
