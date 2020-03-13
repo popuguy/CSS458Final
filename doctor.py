@@ -96,6 +96,7 @@ class Doctor:
         # DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT
         # Thus, for average time spent doing OTHER we use PORTION * all time
         # = TIME_SPENT_WITH_PATIENT
+#        print("portion = ", portion)
         total_time_unit = DoctorConstant.AVG_TIME_SPENT_WITH_PATIENT / \
                           portion
         time_spent_doing_other = total_time_unit - \
