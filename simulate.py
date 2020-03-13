@@ -611,6 +611,7 @@ if __name__ == '__main__':
     # compareAvgWaitingTimeAsPatientPerHourIncreases()
     compareDoctorTimeSpent()
 
+    comparePercentPatientsInfectedAndWaitingTime()
    # simulate_waiting(verbose=True)  #default calling function
 
 #    comparePercentPatientsInfectedFCFSVsFastFirst()
