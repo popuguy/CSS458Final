@@ -30,7 +30,7 @@ def simulate_waiting(time_span=timedelta(days=1),
                      setAttributes=True, use_linear_rise_fall=True,
                      basic_patients_per_hour=None,
                      portion_time_doc_spend=False,
-                     portion=0.25, get_infected_percent=False):
+                     portionChange=0.25, get_infected_percent=False):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
@@ -94,7 +94,7 @@ def simulate_waiting(time_span=timedelta(days=1),
          # For different portion time
         if portion_time_doc_spend == True:
             for doctor in doctors:
-                doctor.update_activity_change_portion_time(time_delta, portion)
+                doctor.update_activity_change_portion_time(time_delta, portion=portionChange)
 
         # --- FILLING WITH DOCTORS ---
         doctors_available = []
@@ -364,7 +364,6 @@ def comparePatientsWithoutAttributes():
 def compareDoctorsPlusExamRoomsQuantity():
     """This function compares the average waiting time with
         different number of doctors and exam rooms
-
         """
     print("Comparing patient's average waiting time using different" +
           " number of  and exam rooms...")
@@ -517,33 +516,35 @@ def compareDoctorTimeSpent():
     time spent with patients increases
     """
 
-    print("Comparing the average waiting time as portion of doctor time spent with patients increases")
+    print("Comparing the average waiting time as portion of doctor time " + 
+          "spent with patients increases...")
+    print("(can take up to 40 seconds)")
 
-    iteration = 50
-    # Mean of all average waiting
-    mean_avg_wait_time = N.arange(HospitalConstant.NUM_DOCTORS)
-    portionChange = 0.25
-    portion_time = []
-    portion_time.append(portionChange)
-    # - time in 100 iterations
+    iteration = 100
+    
+    portion_time = N.arange(1,8) * 0.125
+    mean_avg_wait_time = N.arange(len(portion_time)) #- Mean of all average waiting
+#    portionChange = 0.25
+#    portion_time = []
+#    portion_time.append(portionChange)
 
-    for i in range(HospitalConstant.NUM_DOCTORS):
+    for i in range(len(portion_time)):
         avg_wait_time = N.arange(iteration)
 
         for j in range(iteration):
             avg_wait_time[j] = \
-                simulate_waiting(portion_time_doc_spend = True, portion=portionChange)
+                simulate_waiting(portion_time_doc_spend=True, portionChange=portion_time[i])
 
-            portionChange += 0.20
-            portion_time.append(portionChange)
+#            portionChange += 0.20
+#            portion_time.append(portionChange)
         mean_avg_wait_time[i] = N.mean(avg_wait_time)
 
     plt.figure(2)
-    plt.xticks(portion_time)
-    plt.plot(mean_avg_wait_time)
-    plt.xlabel("Portion of time")
+#    plt.xticks(portion_time)
+    plt.plot(portion_time, mean_avg_wait_time)
+    plt.xlabel("Portion of time doctor spends with patient")
     plt.ylabel("Average waiting time")
-    plt.title("Average waiting time vs. Portion of time")
+    plt.title("Average waiting time vs. Portion of time doctor spends with patient")
     plt.show()
     print()
 
@@ -582,8 +583,8 @@ if __name__ == '__main__':
 
     # compareWaitingTimeAndDeviationByTimeDelta()
     # compareAvgWaitingTimeAsPatientPerHourIncreases()
-    # compareDoctorTimeSpent()
+    compareDoctorTimeSpent()
 
    # simulate_waiting(verbose=True)  #default calling function
 
-    comparePercentPatientsInfectedFCFSVsFastFirst()
+#    comparePercentPatientsInfectedFCFSVsFastFirst()
