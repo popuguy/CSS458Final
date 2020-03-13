@@ -250,19 +250,6 @@ def compareQueuingMethod():
     plt.show()
     print()
 
-
-#    plt.figure(1)
-#    plt.plot(waittime_first_come_first_serve, time)
-#    plt.xlabel("waittime_first_come_first_serve")
-#    plt.ylabel("Time")
-#    plt.show()
-#    
-#    plt.figure(2)
-#    plt.plot(waittime_prioritize_treatment_time, time)
-#    plt.xlabel("waittime_prioritize_treatment_time")
-#    plt.ylabel("Time")
-#    plt.show()
-
 def compareExamRoomsQuantity():
     """This function compare average waiting time with different number of
     examination rooms
