@@ -28,7 +28,10 @@ def simulate_waiting(time_span=timedelta(days=1),
                      number_of_exam_rooms=HospitalConstant.EXAM_ROOMS,
                      number_of_doctors=HospitalConstant.NUM_DOCTORS,
                      setAttributes=True, use_linear_rise_fall=True,
-                     basic_patients_per_hour=None):
+                     basic_patients_per_hour=None
+                     setAttributes=True,
+                     portion_time_doc_spend=False,
+                     portion=0.25):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
@@ -88,6 +91,11 @@ def simulate_waiting(time_span=timedelta(days=1),
 
         for doctor in doctors:
             doctor.update_activity(time_delta)
+
+         # For different portion time
+        if portion_time_doc_spend == True:
+            for doctor in doctors:
+                doctor.update_activity_change_portion_time(time_delta, portion)
 
         # --- FILLING WITH DOCTORS ---
         doctors_available = []
@@ -207,6 +215,7 @@ def compareQueuingMethod():
           " using 2 queuing methods...")
     print("(can take up to 10 seconds)")
     iteration = 50
+    iteration_step = N.arange(iteration) + 1
 
     # Average waiting-time using different queuing methods
     waittime_first_come_first_serve = N.zeros(iteration, dtype='d')
@@ -227,6 +236,17 @@ def compareQueuingMethod():
           round(mean_waittime_first_come_first_serve, 1), " minutes")
     print("'Process queueing by CPU burst time' queuing method: ", \
           round(mean_waittime_prioritize_treatment_time, 1), " minutes")
+
+    plt.figure(1)
+    plt.plot(iteration_step, waittime_first_come_first_serve,
+             color='skyblue', label="'First come, first served'")
+    plt.plot(iteration_step, waittime_prioritize_treatment_time, color='olive',
+             linestyle='dashed', label="'Process queueing by CPU burst time'")
+    plt.xlabel("Iteration")
+    plt.ylabel("Average waiting time")
+    plt.title("Average waiting time using 2 different queuing methods")
+    plt.legend()
+    plt.show()
     print()
 
 
@@ -471,6 +491,40 @@ def compareWaitingTimeAndDeviationByTimeDelta():
     plt.title("Standard deviation of wait time as a function of minutes in loop iteration time delta")
     plt.show()
 
+def compareDoctorTimeSpent():
+    """This function compares the average waiting time as portion of doctor
+    time spent with patients increases
+    """
+
+    print("Comparing the average waiting time as portion of doctor time spent with patients increases")
+
+    iteration = 50
+    # Mean of all average waiting
+    mean_avg_wait_time = N.arange(HospitalConstant.NUM_DOCTORS)
+    portionChange = 0.25
+    portion_time = []
+    portion_time.append(portionChange)
+    # - time in 100 iterations
+
+    for i in range(HospitalConstant.NUM_DOCTORS):
+        avg_wait_time = N.arange(iteration)
+
+        for j in range(iteration):
+            avg_wait_time[j] = \
+                simulate_waiting(portion_time_doc_spend = True, portion=portionChange)
+
+            portionChange += 0.20
+            portion_time.append(portionChange)
+        mean_avg_wait_time[i] = N.mean(avg_wait_time)
+
+    plt.figure(2)
+    plt.xticks(portion_time)
+    plt.plot(mean_avg_wait_time1)
+    plt.xlabel("Portion of time")
+    plt.ylabel("Average waiting time")
+    plt.title("Average waiting time vs. Portion of time")
+    plt.show()
+    print()
 
 
 # Finished metrics:
@@ -502,7 +556,7 @@ if __name__ == '__main__':
     # compareExamRoomsQuantity()
     # compareDoctorsQuantity()
     # comparePatientsWithoutAttributes()
-    # comparePatientsWithoutAttributes()
+
     # comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange()
 
     # compareWaitingTimeAndDeviationByTimeDelta()
