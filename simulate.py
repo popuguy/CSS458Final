@@ -30,7 +30,7 @@ def simulate_waiting(time_span=timedelta(days=1),
                      setAttributes=True, use_linear_rise_fall=True,
                      basic_patients_per_hour=None,
                      portion_time_doc_spend=False,
-                     portion=0.25):
+                     portion=0.25, get_infected_percent=False):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
@@ -200,7 +200,9 @@ def simulate_waiting(time_span=timedelta(days=1),
 
     # Number of patients infected
     #    print(total_num_patients_infected, "total_num_patients_infected")
-
+    portion_patients_infected = total_num_patients_infected / len(patients_visiting)
+    if get_infected_percent:
+        return portion_patients_infected
     return avg_wait_time  # , total_served_patients
 
 
@@ -457,10 +459,43 @@ def compareAvgWaitingTimeAsPatientPerHourIncreases():
     plt.show()
 
 
-def comparePercentPatientsInfectedFCFSVsLinearIncDec():
-    # patients_per_hour
+def comparePercentPatientsInfectedFCFSVsFastFirst():
+    # ------------------------------------------------------------------------------------------------------------------------------------paul working
+    patients_per_hour = (N.arange(0, 22) * 0.5) + 1.5
+    iterations = 10
+    infected_percent_averages_fcfs = N.zeros(len(patients_per_hour))
+    print(len(infected_percent_averages_fcfs))
+    infected_percent_averages_ff = N.zeros(len(patients_per_hour))
+    for i in range(len(patients_per_hour)):
+        print("Progress:", int(i / len(patients_per_hour) * 100), "%")
+        infected_percent_fcfs = N.zeros(iterations)
+        infected_percent_ff = N.zeros(iterations)
+        for j in range(iterations):
+            infected_percent_fcfs[j] = \
+                simulate_waiting(use_linear_rise_fall=False,
+                                 basic_patients_per_hour=patients_per_hour[i],
+                                 get_infected_percent=True,
+                                 queue_method="first_come_first_serve")
+            infected_percent_ff[j] = \
+                simulate_waiting(use_linear_rise_fall=False,
+                                 basic_patients_per_hour=patients_per_hour[i],
+                                 get_infected_percent=True,
+                                 queue_method="prioritize_treatment_time")
+        infected_percent_averages_fcfs[i] = N.mean(infected_percent_fcfs)
+        infected_percent_averages_ff[i] = N.mean(infected_percent_ff)
 
-    pass
+    plt.figure(2)
+    plt.plot(patients_per_hour, infected_percent_averages_fcfs,
+             color='skyblue', label="FCFS")
+    plt.plot(patients_per_hour, infected_percent_averages_ff, color='olive',
+             linestyle='dashed', label="Fast-first")
+
+    plt.xlabel("N patients per hour")
+    plt.ylabel("Portion patients infected")
+    plt.legend(loc="upper left")
+    plt.title("Comparison of FCFS queuing with fast-first queuing over N patients per hour")
+    plt.show()
+
 
 def compareWaitingTimeAndDeviationByTimeDelta():
     iterations = 100  # Iterations per run
@@ -561,4 +596,6 @@ if __name__ == '__main__':
     # compareWaitingTimeAndDeviationByTimeDelta()
     # compareAvgWaitingTimeAsPatientPerHourIncreases()
 
-   simulate_waiting(verbose=True)  #default calling function
+   # simulate_waiting(verbose=True)  #default calling function
+
+    comparePercentPatientsInfectedFCFSVsFastFirst()
