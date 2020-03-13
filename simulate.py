@@ -208,6 +208,7 @@ def compareQueuingMethod():
           " using 2 queuing methods...")
     print("(can take up to 10 seconds)")
     iteration = 50
+    iteration_step = N.arange(iteration) + 1
 
     # Average waiting-time using different queuing methods
     waittime_first_come_first_serve = N.zeros(iteration, dtype='d')
@@ -228,20 +229,18 @@ def compareQueuingMethod():
           round(mean_waittime_first_come_first_serve, 1), " minutes")
     print("'Process queueing by CPU burst time' queuing method: ", \
           round(mean_waittime_prioritize_treatment_time, 1), " minutes")
+
+    plt.figure(1)
+    plt.plot(iteration_step, waittime_first_come_first_serve,
+             color='skyblue', label="'First come, first served'")
+    plt.plot(iteration_step, waittime_prioritize_treatment_time, color='olive',
+             linestyle='dashed', label="'Process queueing by CPU burst time'")
+    plt.xlabel("Iteration")
+    plt.ylabel("Average waiting time")
+    plt.title("Average waiting time using 2 different queuing methods")
+    plt.legend()
+    plt.show()
     print()
-
-
-#    plt.figure(1)
-#    plt.plot(waittime_first_come_first_serve, time)
-#    plt.xlabel("waittime_first_come_first_serve")
-#    plt.ylabel("Time")
-#    plt.show()
-#    
-#    plt.figure(2)
-#    plt.plot(waittime_prioritize_treatment_time, time)
-#    plt.xlabel("waittime_prioritize_treatment_time")
-#    plt.ylabel("Time")
-#    plt.show()
 
 def compareExamRoomsQuantity():
     """This function compare average waiting time with different number of
