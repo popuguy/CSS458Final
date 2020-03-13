@@ -28,8 +28,7 @@ def simulate_waiting(time_span=timedelta(days=1),
                      number_of_exam_rooms=HospitalConstant.EXAM_ROOMS,
                      number_of_doctors=HospitalConstant.NUM_DOCTORS,
                      setAttributes=True, use_linear_rise_fall=True,
-                     basic_patients_per_hour=None
-                     setAttributes=True,
+                     basic_patients_per_hour=None,
                      portion_time_doc_spend=False,
                      portion=0.25):
     """Main simulation function. Simulates the cycle of treat-and-release
@@ -560,6 +559,6 @@ if __name__ == '__main__':
     # comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange()
 
     # compareWaitingTimeAndDeviationByTimeDelta()
-    compareAvgWaitingTimeAsPatientPerHourIncreases()
+    # compareAvgWaitingTimeAsPatientPerHourIncreases()
 
-   # simulate_waiting(verbose=True)  #default calling function
+   simulate_waiting(verbose=True)  #default calling function
