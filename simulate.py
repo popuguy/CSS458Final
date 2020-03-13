@@ -194,6 +194,7 @@ def simulate_waiting(time_span=timedelta(days=1),
                                   patients_visiting[i].time_queued
         wait_time_patient_mins = time_delta_to_minutes(wait_time_patient_delta)
         total_wait_time += wait_time_patient_mins
+    global avg_wait_time
     avg_wait_time = total_wait_time / total_served_patients
     #    print("total_served_patients = ", total_served_patients)
     #    print("Average wait time for simulation:", avg_wait_time, "minutes.")
@@ -548,7 +549,32 @@ def compareDoctorTimeSpent():
     plt.show()
     print()
 
+def comparePercentPatientsInfectedAndWaitingTime():
+    patients_per_hour = (N.arange(0, 22) * 0.5) + 1.5
+    iterations = 10
+    infected_percent_averages = N.zeros(len(patients_per_hour))
+    averages_wait_time = N.zeros(len(patients_per_hour))
+    for i in range(len(patients_per_hour)):
+        print("Progress:", int(i / len(patients_per_hour) * 100), "%")
+        infected_percent = N.zeros(iterations)
+        waiting_time = N.zeros(iterations)
+        for j in range(iterations):
+            infected_percent[j] = \
+                simulate_waiting(use_linear_rise_fall=False,
+                                 basic_patients_per_hour=patients_per_hour[i],
+                                 get_infected_percent=True) 
+            waiting_time[j] = avg_wait_time
+        infected_percent_averages[i] = N.mean(infected_percent)
+        averages_wait_time[i] = N.mean(waiting_time)
+        #print(infected_percent_averages[i])
 
+    plt.figure(2)
+    #plt.plot(infected_percent_averages, averages_wait_time)
+    plt.scatter(infected_percent_averages, averages_wait_time)
+    plt.xlabel("Percentage of infected patients")
+    plt.ylabel("Waiting time")
+    plt.title("Comparing percentage of infected patients and waiting time")
+    plt.show()
 # Finished metrics:
 # 1 patients with and without attribute thinking
 # 2 patient average waiting time with just doctor increase
