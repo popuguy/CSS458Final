@@ -87,6 +87,12 @@ class PatientConstant:
     Calculating the rate difference from the mean of all visits' time duration
     of difference attributes 
     """
+    @staticmethod
+    def get_adjusted_infection_chance(R0):
+        INFECTIOUSNESS_MULTIPLIER = R0 / 1.3
+        BASE_INFECTIOUSNESS = 300  # Minutes for 50% chance at 1.3 R0
+        DISEASE_INFECTION_CHANCE_PER_MINUTE = \
+            0.5 / (BASE_INFECTIOUSNESS * (1 / INFECTIOUSNESS_MULTIPLIER))
     PLUS_OR_MINUS_PORTION = 0.01
     PORTION_INFECTED = 0.1
     # Slight source:
@@ -101,7 +107,8 @@ class PatientConstant:
     # Another source:
     # https://arstechnica.com/science/2020/03/dont-panic-the-comprehensive-ars-technica-guide-to-the-coronavirus/2/#h3
     # 2-2.5 R0 number for COVID-19 as opposed to 1.3 for seasonal flu
-    INFECTIOUSNESS_MULTIPLIER = 2.25 / 1.3
+    DISEASE_R0 = 2.25
+    INFECTIOUSNESS_MULTIPLIER = DISEASE_R0 / 1.3
     BASE_INFECTIOUSNESS = 300  # Minutes for 50% chance at 1.3 R0
     DISEASE_INFECTION_CHANCE_PER_MINUTE = \
         0.5 / (BASE_INFECTIOUSNESS * (1 / INFECTIOUSNESS_MULTIPLIER))
@@ -116,7 +123,6 @@ class PatientConstant:
     # - Patient's gender attribute
     RATE_GENDER_MALE = 187.4 / MEAN_ALL_VISITS
     RATE_GENDER_FEMALE = 202.8 / MEAN_ALL_VISITS
-    # RATE_GENDER = [RATE_GENDER_MALE, RATE_GENDER_FEMALE]
 
     # - Patient's race attribute
     RATE_RACE_WHITE = 190.6 / MEAN_ALL_VISITS
@@ -125,8 +131,6 @@ class PatientConstant:
     RATE_RACE_ASIAN = 203.8 / MEAN_ALL_VISITS
     RATE_RACE_NATIVE = 204.7 / MEAN_ALL_VISITS
     RATE_RACE_OTHER = 193.8 / MEAN_ALL_VISITS
-    # RATE_RACE = [RATE_RACE_WHITE, RATE_RACE_BLACK, RATE_RACE_HISPANIC, \
-    #              RATE_RACE_ASIAN, RATE_RACE_NATIVE, RATE_RACE_OTHER]
     RATE_RACE_DICT = {PatientRace.WHITE: RATE_RACE_WHITE,
                       PatientRace.BLACK: RATE_RACE_BLACK,
                       PatientRace.HISPANIC: RATE_RACE_HISPANIC,
@@ -140,9 +144,7 @@ class PatientConstant:
     RATE_INSURANCE_PRIVATE = 192.8 / MEAN_ALL_VISITS
     RATE_INSURANCE_OTHER = 169.4 / MEAN_ALL_VISITS
     RATE_INSURANCE_UNINSURED = 191.8 / MEAN_ALL_VISITS
-    # RATE_INSURANCE = [RATE_INSURANCE_MEDICARE, RATE_INSURANCE_MEDICAID,
-    #                  RATE_INSURANCE_PRIVATE, RATE_INSURANCE_OTHER,
-    #                  RATE_INSURANCE_UNINSURED]
+
     RATE_INSURANCE_DICT = {PatientInsurance.MEDICARE: RATE_INSURANCE_MEDICARE,
                            PatientInsurance.MEDICAID: RATE_INSURANCE_MEDICAID,
                            PatientInsurance.PRIVATE: RATE_INSURANCE_PRIVATE,

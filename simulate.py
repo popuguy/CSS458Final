@@ -34,6 +34,15 @@ def simulate_waiting(time_span=timedelta(days=1),
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
+    :param number_of_exam_rooms: Number exam rooms to use
+    :param number_of_doctors: Number of doctors to use
+    :param setAttributes: Parameter only used in making graphs
+    :param use_linear_rise_fall: Parameter only used in making graphs
+    :param basic_patients_per_hour: Parameter only used in making graphs
+    :param portion_time_doc_spend: Parameter only used in making graphs
+    :param portionChange: Parameter only used in making graphs
+    :param get_infected_percent: Parameter only used in making graphs
+    :return: Average waiting time, or if appropriate, portion of patients infected
     :param verbose: If True, print info in simulation.
     :param time_span: Length of full simulation.
     :param time_delta: Time between movements in simulation.
@@ -251,6 +260,19 @@ def compareQueuingMethod():
     plt.show()
     print()
 
+
+#    plt.figure(1)
+#    plt.plot(waittime_first_come_first_serve, time)
+#    plt.xlabel("waittime_first_come_first_serve")
+#    plt.ylabel("Time")
+#    plt.show()
+#    
+#    plt.figure(2)
+#    plt.plot(waittime_prioritize_treatment_time, time)
+#    plt.xlabel("waittime_prioritize_treatment_time")
+#    plt.ylabel("Time")
+#    plt.show()
+
 def compareExamRoomsQuantity():
     """This function compare average waiting time with different number of
     examination rooms
@@ -365,6 +387,7 @@ def comparePatientsWithoutAttributes():
 def compareDoctorsPlusExamRoomsQuantity():
     """This function compares the average waiting time with
         different number of doctors and exam rooms
+
         """
     print("Comparing patient's average waiting time using different" +
           " number of  and exam rooms...")
@@ -517,12 +540,12 @@ def compareDoctorTimeSpent():
     time spent with patients increases
     """
 
-    print("Comparing the average waiting time as portion of doctor time " + 
+    print("Comparing the average waiting time as portion of doctor time " +
           "spent with patients increases...")
     print("(can take up to 40 seconds)")
 
     iteration = 100
-    
+
     portion_time = N.arange(1,8) * 0.125
     mean_avg_wait_time = N.arange(len(portion_time)) #- Mean of all average waiting
 #    portionChange = 0.25
@@ -562,19 +585,52 @@ def comparePercentPatientsInfectedAndWaitingTime():
             infected_percent[j] = \
                 simulate_waiting(use_linear_rise_fall=False,
                                  basic_patients_per_hour=patients_per_hour[i],
-                                 get_infected_percent=True) 
+                                 get_infected_percent=True)
             waiting_time[j] = avg_wait_time
         infected_percent_averages[i] = N.mean(infected_percent)
         averages_wait_time[i] = N.mean(waiting_time)
         #print(infected_percent_averages[i])
+def comparePatientRiskContagiousnessLevel():
+    r0s = N.arange(1,10) * 0.3
+    # PatientConstant.get_adjusted_infection_chance(r0)
 
-    plt.figure(2)
-    #plt.plot(infected_percent_averages, averages_wait_time)
-    plt.scatter(infected_percent_averages, averages_wait_time)
-    plt.xlabel("Percentage of infected patients")
-    plt.ylabel("Waiting time")
-    plt.title("Comparing percentage of infected patients and waiting time")
-    plt.show()
+    # iterations = 10
+    # infected_percent_averages = N.zeros(len(r0s))
+    # averages_wait_time = N.zeros(len(r0s))
+    # for i in range(len(r0s)):
+    #     print("Progress:", int(i / len(patients_per_hour) * 100), "%")
+    #     infected_percent = N.zeros(iterations)
+    #     waiting_time = N.zeros(iterations)
+    #     for j in range(iterations):
+    #         infected_percent[j] = \
+    #             simulate_waiting(use_linear_rise_fall=False,
+    #                              basic_patients_per_hour=4,
+    #                              get_infected_percent=True)
+    #         waiting_time[j] = avg_wait_time
+    #     infected_percent_averages[i] = N.mean(infected_percent)
+    #     averages_wait_time[i] = N.mean(waiting_time)
+    #     # print(infected_percent_averages[i])
+
+
+
+
+def comparePortionPatientsInfectiousInitially():
+    pass
+
+def compareThreeDemographics():
+    """Use Italian and American demographic data for runs
+
+    :return:
+    """
+    pass
+
+    # plt.figure(2)
+    # #plt.plot(infected_percent_averages, averages_wait_time)
+    # plt.scatter(infected_percent_averages, averages_wait_time)
+    # plt.xlabel("Percentage of infected patients")
+    # plt.ylabel("Waiting time")
+    # plt.title("Comparing percentage of infected patients and waiting time")
+    # plt.show()
 # Finished metrics:
 # 1 patients with and without attribute thinking
 # 2 patient average waiting time with just doctor increase
