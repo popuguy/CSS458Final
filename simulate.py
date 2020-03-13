@@ -87,9 +87,9 @@ def simulate_waiting(time_span=timedelta(days=1),
             cur_exam_room.patient = cur_patient
 
         # --- UPDATE DOCTOR ACTIVITIES ---
-
-        for doctor in doctors:
-            doctor.update_activity(time_delta)
+        if portion_time_doc_spend == False:
+            for doctor in doctors:
+                doctor.update_activity(time_delta)
 
          # For different portion time
         if portion_time_doc_spend == True:
