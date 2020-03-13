@@ -27,7 +27,8 @@ def simulate_waiting(time_span=timedelta(days=1),
                      queue_method="prioritize_treatment_time",
                      number_of_exam_rooms=HospitalConstant.EXAM_ROOMS,
                      number_of_doctors=HospitalConstant.NUM_DOCTORS,
-                     setAttributes=True):
+                     setAttributes=True, use_linear_rise_fall=True,
+                     basic_patients_per_hour=None):
     """Main simulation function. Simulates the cycle of treat-and-release
     patients going from the waiting room, to the exam room, to leaving in an
     Emergency Department.
@@ -143,8 +144,13 @@ def simulate_waiting(time_span=timedelta(days=1),
 
         # For different configurations of the simulation, patients will be
         # added at different intervals here
-        patients_to_generate = entrance_style.rise_and_fall_linear(
-            num_loops, time_delta)
+        patients_to_generate = None
+        if use_linear_rise_fall:
+            patients_to_generate = entrance_style.rise_and_fall_linear(
+                num_loops, time_delta)
+        else:
+            patients_to_generate = entrance_style.basic(time_delta, basic_patients_per_hour)
+
         for i in range(patients_to_generate):
             patient = Patient(setAttributes)
             waiting_queue.add(patient, cur_datetime)
@@ -310,15 +316,20 @@ def comparePatientsWithoutAttributes():
     print("Comparing patient's average waiting time with and without \
           taking into account of their attributes...")
     print("(can take up to 10 seconds)")
-    iteration = 100
+    iteration = 25
     iteration_step = N.arange(iteration) + 1
 
     wait_time_with_attributes = N.zeros(iteration, dtype='d')
     wait_time_without_attributes = N.zeros(iteration, dtype='d')
 
     for i in range(iteration):
-        wait_time_with_attributes[i] = simulate_waiting(setAttributes=True)
-        wait_time_without_attributes[i] = simulate_waiting(setAttributes=False)
+        wait_time_with_attributes_i = N.zeros(iteration, dtype='d')
+        wait_time_without_attributes_i = N.zeros(iteration, dtype='d')
+        for j in range(iteration):
+            wait_time_with_attributes_i[j] = simulate_waiting(setAttributes=True)
+            wait_time_without_attributes_i[j] = simulate_waiting(setAttributes=False)
+        wait_time_with_attributes[i] = N.mean(wait_time_with_attributes_i)
+        wait_time_without_attributes[i] = N.mean(wait_time_without_attributes_i)
 
     mean_wait_time_with_attributes = N.mean(wait_time_with_attributes)
     mean_wait_time_without_attributes = N.mean(wait_time_without_attributes)
@@ -407,9 +418,30 @@ def comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange():
             print("better than one increase of 5 doctors and 10 exam rooms")
 
 
-# def compareAvgWaitingTimeAsPatientPerHourIncreases():
-#     patients_per_hour = (N.arange(0, 22) * 0.5) + 1.5
+def compareAvgWaitingTimeAsPatientPerHourIncreases():
+    patients_per_hour = (N.arange(0, 22) * 0.5) + 1.5
+    iterations = 50
+    average_wait_time_averages = N.zeros(len(patients_per_hour))
+    for i in range(len(patients_per_hour)):
+        average_wait_times = N.zeros(iterations)
+        for j in range(iterations):
+            average_wait_times[j] = \
+                simulate_waiting(use_linear_rise_fall=False,
+                                 basic_patients_per_hour=patients_per_hour[i])
+        average_wait_time_averages[i] = N.mean(average_wait_times)
 
+    plt.figure(2)
+    plt.plot(patients_per_hour, average_wait_time_averages)
+    plt.xlabel("N patients per hour")
+    plt.ylabel("Waiting time average")
+    plt.title("Full simulation run with N patients per hour vs Resultant average wait time")
+    plt.show()
+
+
+def comparePercentPatientsInfectedFCFSVsLinearIncDec():
+    # patients_per_hour
+
+    pass
 
 def compareWaitingTimeAndDeviationByTimeDelta():
     iterations = 100  # Iterations per run
@@ -470,9 +502,10 @@ if __name__ == '__main__':
     # compareExamRoomsQuantity()
     # compareDoctorsQuantity()
     # comparePatientsWithoutAttributes()
-
+    # comparePatientsWithoutAttributes()
     # comparePerformanceBenefitExamRoomsDoctorsEqualPrioritizationChange()
 
-    compareWaitingTimeAndDeviationByTimeDelta()
+    # compareWaitingTimeAndDeviationByTimeDelta()
+    compareAvgWaitingTimeAsPatientPerHourIncreases()
 
-#    simulate_waiting()  #default calling function
+   # simulate_waiting(verbose=True)  #default calling function
