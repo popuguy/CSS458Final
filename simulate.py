@@ -540,7 +540,7 @@ def compareDoctorTimeSpent():
 
     plt.figure(2)
     plt.xticks(portion_time)
-    plt.plot(mean_avg_wait_time1)
+    plt.plot(mean_avg_wait_time)
     plt.xlabel("Portion of time")
     plt.ylabel("Average waiting time")
     plt.title("Average waiting time vs. Portion of time")
@@ -582,6 +582,7 @@ if __name__ == '__main__':
 
     # compareWaitingTimeAndDeviationByTimeDelta()
     # compareAvgWaitingTimeAsPatientPerHourIncreases()
+    # compareDoctorTimeSpent()
 
    # simulate_waiting(verbose=True)  #default calling function
 
